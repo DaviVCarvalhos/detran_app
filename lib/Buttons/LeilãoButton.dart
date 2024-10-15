@@ -19,7 +19,7 @@ class LeilaoButton extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const LeilaoPage()),
+          MaterialPageRoute(builder: (context) => LeilaoPage()),
         );
       },
       iconSize: height, // O tamanho do ícone agora é baseado na altura disponível do widget

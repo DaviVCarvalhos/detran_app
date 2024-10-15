@@ -26,11 +26,11 @@ class VeiculoWidget extends StatelessWidget {
                 FittedBox(
                   fit: BoxFit.fitHeight,
                   child: Text(
-                    "Consultar Veículo",
+                    "Veículo",
                     textAlign: TextAlign.center,
                     style:  TextStyle(
                       color: Colors.white,
-                      fontSize: widgetWidth * 0.1 ,
+                      fontSize: widgetWidth * 0.15 ,
                     ),
                   ),
                 )

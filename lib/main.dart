@@ -4,7 +4,7 @@ import 'Pages/HomePage.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
+     MaterialApp(
       title: 'DetranApp',
       home: HomePage(),
     ),

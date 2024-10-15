@@ -7,7 +7,7 @@ class ConsultarVeiculoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Consultar Veículos'),
+        title: const Text('Veículos'),
       ),
       body: const Center(
         child: Text('Você está na página de Consultar Veículos'),
