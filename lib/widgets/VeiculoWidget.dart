@@ -1,5 +1,7 @@
 
-import 'package:detranapp/Buttons/ConsultarVeiculoButton.dart';
+
+
+import 'package:detranapp/Pages/ConsultarVeiculoPage.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoWidget extends StatelessWidget {
@@ -8,6 +10,7 @@ class VeiculoWidget extends StatelessWidget {
   });
 
   @override
+   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -17,23 +20,32 @@ class VeiculoWidget extends StatelessWidget {
         return Container(
           width: widgetWidth,
           height: widgetHeight,
-          color: const Color.fromARGB(255, 10, 8, 8),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 7.0),
+          color: const Color.fromARGB(255, 53, 114, 175),
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ConsultarVeiculoPage()),
+              );
+            },
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ConsultarVeiculoButton(width: widgetWidth, height: widgetHeight * 0.5),
-                FittedBox(
-                  fit: BoxFit.fitHeight,
-                  child: Text(
-                    "Veículo",
-                    textAlign: TextAlign.center,
-                    style:  TextStyle(
-                      color: Colors.white,
-                      fontSize: widgetWidth * 0.15 ,
-                    ),
+                
+                Icon(
+                  Icons.directions_car,
+                  size: widgetHeight * 0.5, 
+                  color: Colors.white,
+                ),
+                SizedBox(height: 10), 
+                Text(
+                  "Veículo",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: widgetHeight * 0.15,
                   ),
-                )
+                ),
               ],
             ),
           ),

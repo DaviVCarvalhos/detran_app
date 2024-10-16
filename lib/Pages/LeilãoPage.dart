@@ -1,4 +1,5 @@
 import 'package:detranapp/models/Leilao.dart';
+import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:flutter/material.dart';
 
 class LeilaoPage extends StatefulWidget {
@@ -53,13 +54,8 @@ List<Leilao> filteredLeiloes = [];
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Leilão',
-        style: TextStyle(
-          
-          color: Colors.white,
-        ),
+        title: DetranTitle(),
         
-        ),
         backgroundColor:  const Color.fromARGB(255, 0, 128, 198),
         leading: BackButton(color: Colors.white,),
         centerTitle: true,

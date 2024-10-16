@@ -1,5 +1,5 @@
 
-import 'package:detranapp/Buttons/Leil%C3%A3oButton.dart';
+import 'package:detranapp/Pages/Leil%C3%A3oPage.dart';
 import 'package:flutter/material.dart';
 
 class LeilaoWidget extends StatelessWidget {
@@ -17,24 +17,32 @@ class LeilaoWidget extends StatelessWidget {
         return Container(
           width: widgetWidth,
           height: widgetHeight,
-          color: const Color.fromARGB(255, 252, 0, 0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 7.0),
+          color: const Color.fromARGB(255, 52, 58, 64),
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LeilaoPage()),
+              );
+            },
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                LeilaoButton(width: widgetWidth, height: widgetHeight * 0.5),
-                Padding(
-                  padding: const EdgeInsets.symmetric(),
-                  child: Text(
-                    "Leilão",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: widgetHeight *0.15,
-                       
-                    ),
+                
+                Icon(
+                  Icons.gavel,
+                  size: widgetHeight * 0.5, // Define o tamanho do ícone
+                  color: Colors.white,
+                ),
+                SizedBox(height: 10), // Espaço entre o ícone e o texto
+                Text(
+                  "Leilão",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: widgetHeight * 0.15,
                   ),
-                )
+                ),
               ],
             ),
           ),
