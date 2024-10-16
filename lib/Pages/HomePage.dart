@@ -5,11 +5,15 @@ import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
+
   
-  // Lista de widgets
   final List<Widget> widgets = [
     VeiculoWidget(),
     LeilaoWidget(),
+    
+    
+
+  
   ];
 
   @override
@@ -21,11 +25,11 @@ class HomePage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white, 
-                foregroundColor: const Color.fromARGB(255, 0, 128, 198), // Cor do texto e ícone
+                backgroundColor: Colors.white,
+                foregroundColor: const Color.fromARGB(255, 0, 128, 198), 
                 elevation: 2,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20), // Bordas arredondadas
+                  borderRadius: BorderRadius.circular(20), 
                 ),
               ),
               onPressed: () {
@@ -39,11 +43,47 @@ class HomePage extends StatelessWidget {
             ),
           ),
         ],
-        title: Image.asset(
-          'images/detranlogo.jpg', 
-          height: 50, 
+        title: Row(
+          children: [
+            Image.asset(
+              'images/detranlogo.jpg',
+              height: 50,
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  
+                  
+                  Transform.translate(
+                    offset: Offset(2, 2), 
+                    child: Text(
+                      "DETRAN/RN",
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.5), 
+                        fontFamily: 'Arial',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 28,
+                      ),
+                    ),
+                  ),
+                  
+                  Text(
+                    "DETRAN/RN",
+                    style: TextStyle(
+                      color: Colors.white, // Cor do texto
+                      fontFamily: 'Arial',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-        centerTitle: true,
+        centerTitle: false,
         backgroundColor: const Color.fromARGB(255, 0, 128, 198),
       ),
       body: LayoutBuilder(
@@ -53,7 +93,7 @@ class HomePage extends StatelessWidget {
             child: GridView.builder(
               padding: const EdgeInsets.symmetric(vertical: 20),
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 250, // Largura máxima dos widgets aumentada
+                maxCrossAxisExtent: 200, // Largura máxima dos widgets aumentada
                 mainAxisSpacing: 20, // Espaçamento vertical entre widgets
                 crossAxisSpacing: 20, // Espaçamento horizontal entre widgets
                 childAspectRatio: 1, // Proporção mais equilibrada
