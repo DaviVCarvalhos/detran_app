@@ -56,7 +56,7 @@ List<Leilao> filteredLeiloes = [];
       appBar: AppBar(
         title: DetranTitle(),
         
-        backgroundColor:  const Color.fromARGB(255, 0, 128, 198),
+        backgroundColor:  const Color.fromARGB(255, 32, 36, 39),
         leading: BackButton(color: Colors.white,),
         centerTitle: true,
       ),
