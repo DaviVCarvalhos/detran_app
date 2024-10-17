@@ -1,7 +1,7 @@
 
 
 
-import 'package:detranapp/Pages/VeiculoPage.dart';
+import 'package:detranapp/Pages/ConsultarVeiculoPage.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoWidget extends StatelessWidget {
@@ -9,6 +9,7 @@ class VeiculoWidget extends StatelessWidget {
     super.key,
   });
 
+  @override
    @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -24,7 +25,7 @@ class VeiculoWidget extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => VeiculoPage()),
+                MaterialPageRoute(builder: (context) => ConsultarVeiculoPage()),
               );
             },
             child: Column(

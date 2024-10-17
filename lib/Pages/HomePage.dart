@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
 
   final List<Widget> widgets = [
     VeiculoWidget(),
-    InfracoesWidget(),
+    LeilaoWidget(),
     LeilaoWidget(),
     LeilaoWidget(),
     LeilaoWidget(),
