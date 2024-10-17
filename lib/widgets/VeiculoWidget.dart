@@ -1,7 +1,4 @@
-
-
-
-import 'package:detranapp/Pages/ConsultarVeiculoPage.dart';
+import 'package:detranapp/Pages/Veiculo/VeiculoPage.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoWidget extends StatelessWidget {
@@ -10,7 +7,6 @@ class VeiculoWidget extends StatelessWidget {
   });
 
   @override
-   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -25,19 +21,18 @@ class VeiculoWidget extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ConsultarVeiculoPage()),
+                MaterialPageRoute(builder: (context) => VeiculoPage()),
               );
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
                 Icon(
                   Icons.directions_car,
-                  size: widgetHeight * 0.5, 
+                  size: widgetHeight * 0.5,
                   color: Colors.white,
                 ),
-                SizedBox(height: 10), 
+                SizedBox(height: 10),
                 Text(
                   "Veículo",
                   textAlign: TextAlign.center,

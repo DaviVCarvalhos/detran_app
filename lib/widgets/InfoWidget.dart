@@ -1,5 +1,5 @@
+import 'package:detranapp/Pages/Info/InfoPage.dart';
 import 'package:flutter/material.dart';
-import 'package:detranapp/Pages/InfoPage.dart';
 
 class InfoWidget extends StatelessWidget {
   const InfoWidget({
