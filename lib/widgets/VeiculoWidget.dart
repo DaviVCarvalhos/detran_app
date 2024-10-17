@@ -1,7 +1,4 @@
-
-
-
-import 'package:detranapp/Pages/VeiculoPage.dart';
+import 'package:detranapp/Pages/Veiculo/VeiculoPage.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoWidget extends StatelessWidget {
@@ -9,7 +6,7 @@ class VeiculoWidget extends StatelessWidget {
     super.key,
   });
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -30,13 +27,12 @@ class VeiculoWidget extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
                 Icon(
                   Icons.directions_car,
-                  size: widgetHeight * 0.5, 
+                  size: widgetHeight * 0.5,
                   color: Colors.white,
                 ),
-                SizedBox(height: 10), 
+                SizedBox(height: 10),
                 Text(
                   "Veículo",
                   textAlign: TextAlign.center,

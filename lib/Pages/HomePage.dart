@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  
+  //vai ter que ter a lista de veiculos
+
   final List<Widget> widgets = [
     VeiculoWidget(),
     InfracoesWidget(),
@@ -21,8 +22,6 @@ class HomePage extends StatelessWidget {
     LeilaoWidget(),
     LeilaoWidget(),
     LeilaoWidget(),
-
-  
   ];
 
   @override
@@ -54,10 +53,10 @@ class HomePage extends StatelessWidget {
               itemCount: widgets.length,
               itemBuilder: (BuildContext context, int index) {
                 return ClipRRect(
-                  borderRadius: BorderRadius.circular(15), 
+                  borderRadius: BorderRadius.circular(15),
                   child: Container(
-                    
-                    child: widgets[index], // Widget dentro do Container arredondado
+                    child: widgets[
+                        index], // Widget dentro do Container arredondado
                   ),
                 );
               },
@@ -68,7 +67,3 @@ class HomePage extends StatelessWidget {
     );
   }
 }
-
-
-
-
