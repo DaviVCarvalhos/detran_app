@@ -56,7 +56,7 @@ List<Leilao> filteredLeiloes = [];
       appBar: AppBar(
         title: DetranTitle(),
         
-        backgroundColor:  const Color.fromARGB(255, 32, 36, 39),
+        backgroundColor:   const Color.fromARGB(255, 52, 58, 64),
         leading: BackButton(color: Colors.white,),
         centerTitle: true,
       ),
@@ -69,30 +69,93 @@ List<Leilao> filteredLeiloes = [];
                 _filterLeiloes(value); 
               },
               decoration: InputDecoration(
-                labelText: 'Buscar Leilões',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  labelText: 'Buscar Leilões',
+                  labelStyle: TextStyle(color: const Color.fromARGB(255, 52, 58, 64),),
+                  prefixIcon: Icon(Icons.search,
+                  color:const Color.fromARGB(255, 52, 58, 64),
+                  
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    borderSide: BorderSide(color: const Color.fromARGB(255, 52, 58, 64), )
+                    
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    borderSide: BorderSide(color: const Color.fromARGB(255, 52, 58, 64), )
+                  )
                 ),
-              ),
             ),
           ),
           Expanded(
-        child: ListView.builder(
-          itemCount: filteredLeiloes.length, 
-          itemBuilder: (context, index) {
-            
-            return Card(
-              child: ListTile(
-                title: Text(filteredLeiloes[index].descricao),
-                subtitle: Text(filteredLeiloes[index].dataleilao),
-              ),
-            );
-          },
-        ),
+        child: ListaLeilaoView(filteredLeiloes: filteredLeiloes),
       ),
         ]
       )
+    );
+  }
+}
+
+class ListaLeilaoView extends StatelessWidget {
+  const ListaLeilaoView({
+    super.key,
+    required this.filteredLeiloes,
+  });
+
+  final List<Leilao> filteredLeiloes;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: filteredLeiloes.length,
+      itemBuilder: (context, index) {
+        return Card(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              color: Colors.black54, // Cor de fundo geral do card
+              child: Column(
+                children: [
+                  // Título com fundo separado
+                  Container(
+                     // Cor de fundo do título
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      filteredLeiloes[index].dataleilao,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // Cor do texto do título
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+            
+                  // Linha divisória
+                  Divider(
+                    
+                    thickness: 0.5, 
+                    height: 0, 
+                  ),
+            
+                  // Subtítulo com fundo separado
+                  Container(
+                    color: Colors.black38, // Cor de fundo do subtítulo
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      filteredLeiloes[index].descricao,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // Cor do texto do subtítulo
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
