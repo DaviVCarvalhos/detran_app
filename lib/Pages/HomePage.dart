@@ -1,6 +1,7 @@
 import 'package:detranapp/Buttons/LoginButton.dart';
 
 import 'package:detranapp/widgets/DetranTitle.dart';
+import 'package:detranapp/widgets/InfoWidget.dart';
 import 'package:detranapp/widgets/InfracoesWidget.dart';
 import 'package:detranapp/widgets/LeilaoWidget.dart';
 import 'package:detranapp/widgets/VeiculoWidget.dart';
@@ -14,7 +15,7 @@ class HomePage extends StatelessWidget {
   final List<Widget> widgets = [
     VeiculoWidget(),
     InfracoesWidget(),
-    LeilaoWidget(),
+    InfoWidget(),
     LeilaoWidget(),
     LeilaoWidget(),
     LeilaoWidget(),
