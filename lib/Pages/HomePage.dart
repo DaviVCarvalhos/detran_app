@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(15), 
                   child: Container(
                     
-                    child: widgets[index], // Widget dentro do Container arredondado
+                     child: widgets[index], // Widget dentro do Container arredondado
                   ),
                 );
               },
