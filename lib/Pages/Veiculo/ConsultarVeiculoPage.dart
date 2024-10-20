@@ -42,55 +42,66 @@ class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const Text('Placa',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          TextField(
-              controller: placaController,
-              decoration: InputDecoration(border: OutlineInputBorder())),
-          const SizedBox(height: 16),
-          const Text('Renavam',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          TextField(
-              controller: renavamController,
-              decoration: InputDecoration(border: OutlineInputBorder())),
-          const SizedBox(height: 32),
-          Center(
-            child: ElevatedButton(
-              onPressed: consultarVeiculo,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 32.0, vertical: 16.0),
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Text('Placa',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              TextField(
+                  controller: placaController,
+                  decoration: InputDecoration(border: OutlineInputBorder())),
+              const SizedBox(height: 16),
+              const Text('Renavam',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              TextField(
+                  controller: renavamController,
+                  decoration: InputDecoration(border: OutlineInputBorder())),
+              const SizedBox(height: 32),
+              Center(
+                child: ElevatedButton(
+                  onPressed: consultarVeiculo,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32.0, vertical: 16.0),
+                  ),
+                  child: const Text('Consultar',
+                      style: TextStyle(color: Colors.white, fontSize: 16)),
+                ),
               ),
-              child: const Text('Consultar',
-                  style: TextStyle(color: Colors.white, fontSize: 16)),
+              if (veiculo != null) ...[
+                const SizedBox(height: 32),
+                const Text('Detalhes do Veículo:',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                VeiculoDetails(veiculo: veiculo!),
+              ],
+            ],
+          ),
+        ),
+        if (veiculo != null)
+          Positioned(
+            right: 16,
+            bottom: 16,
+            child: SizedBox(
+              width: 56,
+              height: 56,
+              child: FloatingActionButton(
+                onPressed: adicionarVeiculo,
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.add),
+              ),
             ),
           ),
-          if (veiculo != null) ...[
-            const SizedBox(height: 32),
-            const Text('Detalhes do Veículo:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            VeiculoDetails(veiculo: veiculo!),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: adicionarVeiculo,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 32.0, vertical: 16.0),
-              ),
-              child: const Text('Adicionar a Meus Veículos',
-                  style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ],
-      ),
+      ],
     );
   }
 }

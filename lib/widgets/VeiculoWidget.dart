@@ -1,9 +1,15 @@
 import 'package:detranapp/Pages/Veiculo/VeiculoPage.dart';
+import 'package:detranapp/models/Veiculo.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoWidget extends StatelessWidget {
+  final List<Veiculo> veiculos;
+  final Function(Veiculo) onVeiculoAdicionado;
+
   const VeiculoWidget({
     super.key,
+    required this.veiculos,
+    required this.onVeiculoAdicionado,
   });
 
   @override
@@ -21,7 +27,13 @@ class VeiculoWidget extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => VeiculoPage()),
+                MaterialPageRoute(
+                  builder: (context) => VeiculoPage(
+                    veiculos: veiculos, // Passando a lista de veículos
+                    onVeiculoAdicionado:
+                        onVeiculoAdicionado, // Passando o callback
+                  ),
+                ),
               );
             },
             child: Column(

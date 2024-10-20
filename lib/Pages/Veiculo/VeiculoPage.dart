@@ -5,7 +5,14 @@ import 'package:detranapp/models/Veiculo.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoPage extends StatefulWidget {
-  const VeiculoPage({super.key});
+  final List<Veiculo> veiculos;
+  final Function(Veiculo) onVeiculoAdicionado;
+
+  const VeiculoPage({
+    super.key,
+    required this.veiculos,
+    required this.onVeiculoAdicionado,
+  });
 
   @override
   State<VeiculoPage> createState() => _VeiculoPageState();
@@ -14,22 +21,13 @@ class VeiculoPage extends StatefulWidget {
 class _VeiculoPageState extends State<VeiculoPage> {
   Widget? _conteudoAtual;
   String? _tituloAtual;
-  List<Veiculo> meusVeiculos =
-      []; //provavelmente isso deve ficar na classe de usuario
 
   @override
   void initState() {
     super.initState();
     _conteudoAtual =
-        MeusVeiculosPage(veiculos: meusVeiculos); //MeusVeiculosPage
+        MeusVeiculosPage(veiculos: widget.veiculos); //MeusVeiculosPage
     _tituloAtual = 'Meus Veículos';
-  }
-
-  void adicionarVeiculo(Veiculo veiculo) {
-    setState(() {
-      meusVeiculos.add(veiculo); // Adiciona o veículo à lista
-    });
-    // Você pode navegar para a MeusVeiculosPage aqui se necessário
   }
 
   @override
@@ -72,7 +70,8 @@ class _VeiculoPageState extends State<VeiculoPage> {
               onTap: () {
                 if (isUserLoggedIn()) {
                   setState(() {
-                    _conteudoAtual = MeusVeiculosPage(veiculos: meusVeiculos);
+                    _conteudoAtual =
+                        MeusVeiculosPage(veiculos: widget.veiculos);
                     _tituloAtual = 'Meus Veículos';
                   });
                 } else {
@@ -90,7 +89,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
                 if (isUserLoggedIn()) {
                   setState(() {
                     _conteudoAtual = ConsultarVeiculoPage(
-                        onVeiculoAdicionado: adicionarVeiculo);
+                        onVeiculoAdicionado: widget.onVeiculoAdicionado);
                     _tituloAtual = 'Consulta de Veículo';
                   });
                 } else {
