@@ -84,7 +84,9 @@ class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
             ],
           ),
         ),
-        if (veiculo != null)
+        if (veiculo != null &&
+            veiculo!.nomeProprietario ==
+                'Ian') //Futuramente sera um usuario e verificara nome e cpf para poder adicionar
           Positioned(
             right: 16,
             bottom: 16,
