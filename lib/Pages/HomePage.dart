@@ -63,8 +63,7 @@ class _HomePageState extends State<HomePage> {
                 return ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: Container(
-                    child: widgets[
-                        index], // Widget dentro do Container arredondado
+                    child: widgets[index], // Widget dentro do Container arredondado
                   ),
                 );
               },
