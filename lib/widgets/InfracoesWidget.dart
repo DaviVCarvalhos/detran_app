@@ -1,4 +1,4 @@
-import 'package:detranapp/Pages/InfracoesPage.dart';
+import 'package:detranapp/Buttons/InfracoesButton.dart';
 import 'package:flutter/material.dart';
 
 class InfracoesWidget extends StatelessWidget {
@@ -8,7 +8,7 @@ class InfracoesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        return LayoutBuilder(
+    return LayoutBuilder(
       builder: (context, constraints) {
         double widgetWidth = constraints.maxWidth;
         double widgetHeight = constraints.maxHeight;
@@ -17,31 +17,22 @@ class InfracoesWidget extends StatelessWidget {
           width: widgetWidth,
           height: widgetHeight,
           color: Color(0xFFdc3545),
-          child: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => InfracoesPage()),
-              );
-            },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 7.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
-                Icon(
-                  Icons.local_police,
-                  size: widgetHeight * 0.5, 
-                  color: Colors.white,
-                ),
-                SizedBox(height: 10), 
-                Text(
-                  "Infrações",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: widgetHeight * 0.15,
+                InfracoesButton(width: widgetWidth, height: widgetHeight * 0.5),
+                FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Text(
+                    "Infrações",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: widgetWidth * 0.15,
+                    ),
                   ),
-                ),
+                )
               ],
             ),
           ),
