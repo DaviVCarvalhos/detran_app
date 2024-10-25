@@ -23,7 +23,7 @@ class VeiculoWidget extends StatelessWidget {
         return Container(
           width: widgetWidth,
           height: widgetHeight,
-          color: const Color.fromARGB(255, 53, 114, 175),
+          color: const Color(0xFF2196F3),
           child: InkWell(
             onTap: () {
               Navigator.push(

@@ -26,8 +26,48 @@ class _VeiculoPageState extends State<VeiculoPage> {
   @override
   void initState() {
     super.initState();
-    _conteudoAtual = MeusVeiculosPage(veiculos: widget.user.veiculos);
-    _tituloAtual = 'Meus Veículos';
+    if (widget.user.veiculos.isNotEmpty) {
+      _conteudoAtual = MeusVeiculosPage(veiculos: widget.user.veiculos);
+      _tituloAtual = 'Meus Veículos';
+    } else {
+      _conteudoAtual = _buildEmptyState();
+      _tituloAtual = 'Meus Veículos';
+    }
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.directions_car, size: 80, color: Colors.grey),
+          const SizedBox(height: 20),
+          Text(
+            'Nenhum veículo cadastrado.',
+            style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              if (isUserLoggedIn()) {
+                setState(() {
+                  _conteudoAtual = ConsultarVeiculoPage(
+                    onVeiculoAdicionado: widget.onVeiculoAdicionado,
+                    user: widget.user,
+                  );
+                  _tituloAtual = 'Consulta de Veículo';
+                });
+              } else {
+                setState(() {
+                  _conteudoAtual = const LoginPage();
+                });
+              }
+            },
+            child: const Text('Consultar Veículo'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -37,7 +77,17 @@ class _VeiculoPageState extends State<VeiculoPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_tituloAtual!),
+        backgroundColor: const Color(0xFF2196F3),
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Text(
+            _tituloAtual!,
+            // style: const TextStyle(color: Colors.white),
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -70,9 +120,14 @@ class _VeiculoPageState extends State<VeiculoPage> {
               onTap: () {
                 if (isUserLoggedIn()) {
                   setState(() {
-                    _conteudoAtual =
-                        MeusVeiculosPage(veiculos: widget.user.veiculos);
-                    _tituloAtual = 'Meus Veículos';
+                    if (widget.user.veiculos.isNotEmpty) {
+                      _conteudoAtual =
+                          MeusVeiculosPage(veiculos: widget.user.veiculos);
+                      _tituloAtual = 'Meus Veículos';
+                    } else {
+                      _conteudoAtual = _buildEmptyState();
+                      _tituloAtual = 'Meus Veículos';
+                    }
                   });
                 } else {
                   setState(() {
