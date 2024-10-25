@@ -1,16 +1,17 @@
 import 'package:detranapp/Pages/Veiculo/ConsultarVeiculoPage.dart';
 import 'package:detranapp/Pages/LoginPage.dart';
 import 'package:detranapp/Pages/Veiculo/MeusVeiculosPage.dart';
+import 'package:detranapp/models/User.dart';
 import 'package:detranapp/models/Veiculo.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoPage extends StatefulWidget {
-  final List<Veiculo> veiculos;
+  final User user;
   final Function(Veiculo) onVeiculoAdicionado;
 
   const VeiculoPage({
     super.key,
-    required this.veiculos,
+    required this.user,
     required this.onVeiculoAdicionado,
   });
 
@@ -25,8 +26,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
   @override
   void initState() {
     super.initState();
-    _conteudoAtual =
-        MeusVeiculosPage(veiculos: widget.veiculos); //MeusVeiculosPage
+    _conteudoAtual = MeusVeiculosPage(veiculos: widget.user.veiculos);
     _tituloAtual = 'Meus Veículos';
   }
 
@@ -71,7 +71,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
                 if (isUserLoggedIn()) {
                   setState(() {
                     _conteudoAtual =
-                        MeusVeiculosPage(veiculos: widget.veiculos);
+                        MeusVeiculosPage(veiculos: widget.user.veiculos);
                     _tituloAtual = 'Meus Veículos';
                   });
                 } else {
@@ -89,7 +89,9 @@ class _VeiculoPageState extends State<VeiculoPage> {
                 if (isUserLoggedIn()) {
                   setState(() {
                     _conteudoAtual = ConsultarVeiculoPage(
-                        onVeiculoAdicionado: widget.onVeiculoAdicionado);
+                      onVeiculoAdicionado: widget.onVeiculoAdicionado,
+                      user: widget.user,
+                    );
                     _tituloAtual = 'Consulta de Veículo';
                   });
                 } else {
@@ -231,6 +233,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
 
   bool isUserLoggedIn() {
     // Verificação de login (pode ser substituída pela lógica real)
+    //if(user != null)
     return true; // ou true, dependendo do estado de login
   }
 }

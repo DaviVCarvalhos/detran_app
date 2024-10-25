@@ -18,19 +18,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Veiculo> meusVeiculos = [];
+  User user = User(
+      cpf: '12345678900',
+      datanascimento: DateTime(1990, 5, 10),
+      nome: 'Guts',
+      email: 'GRIIFTHHHHHH@gmail.com',
+      phone_number: '11999999999');
 
   void adicionarVeiculo(Veiculo veiculo) {
     setState(() {
-      meusVeiculos.add(veiculo);
+      user.veiculos.add(veiculo);
+      print(veiculo);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgets = [
-      VeiculoWidget(
-          veiculos: meusVeiculos, onVeiculoAdicionado: adicionarVeiculo),
+      VeiculoWidget(user: user, onVeiculoAdicionado: adicionarVeiculo),
       InfracoesWidget(),
       InfoWidget(),
       LeilaoWidget(),
@@ -88,13 +93,8 @@ class _HomePageState extends State<HomePage> {
             ),
             // Segunda aba: Página de "Meu Perfil"
             PerfilPage(
-                user: User(
-              cpf: '12345678900',
-              datanascimento: DateTime(1990, 5, 10),
-              nome: 'Guts',
-              email: 'GRIIFTHHHHHH@gmail.com',
-              phone_number: '11999999999',
-            )),
+              user: user,
+            ),
           ],
         ),
       ),
