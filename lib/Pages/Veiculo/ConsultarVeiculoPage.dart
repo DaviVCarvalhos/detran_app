@@ -1,11 +1,14 @@
+import 'package:detranapp/models/User.dart';
 import 'package:detranapp/models/Veiculo.dart';
 import 'package:detranapp/widgets/VeiculoDetails.dart';
 import 'package:flutter/material.dart';
 
 class ConsultarVeiculoPage extends StatefulWidget {
   final Function(Veiculo) onVeiculoAdicionado; // Callback
+  final User user; // Usuário logado
 
-  const ConsultarVeiculoPage({Key? key, required this.onVeiculoAdicionado})
+  const ConsultarVeiculoPage(
+      {Key? key, required this.onVeiculoAdicionado, required this.user})
       : super(key: key);
 
   @override
@@ -27,7 +30,7 @@ class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
           renavam: renavam,
           modelo: 'VW JETTA 2.0T (Importado)',
           anoFabricacao: '2013',
-          nomeProprietario: 'Ian');
+          nomeProprietario: 'Guts');
     });
   }
 
@@ -86,7 +89,8 @@ class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
         ),
         if (veiculo != null &&
             veiculo!.nomeProprietario ==
-                'Ian') //Futuramente sera um usuario e verificara nome e cpf para poder adicionar
+                widget.user
+                    .nome) //Futuramente sera um usuario e verificara nome e cpf para poder adicionar
           Positioned(
             right: 16,
             bottom: 16,

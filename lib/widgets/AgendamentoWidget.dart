@@ -1,16 +1,9 @@
-import 'package:detranapp/Pages/Veiculo/VeiculoPage.dart';
-import 'package:detranapp/models/User.dart';
-import 'package:detranapp/models/Veiculo.dart';
+import 'package:detranapp/Pages/AgendamentoPage.dart';
 import 'package:flutter/material.dart';
 
-class VeiculoWidget extends StatelessWidget {
-  final User user;
-  final Function(Veiculo) onVeiculoAdicionado;
-
-  const VeiculoWidget({
+class AgendamentoWidget extends StatelessWidget {
+  const AgendamentoWidget({
     super.key,
-    required this.user,
-    required this.onVeiculoAdicionado,
   });
 
   @override
@@ -23,30 +16,25 @@ class VeiculoWidget extends StatelessWidget {
         return Container(
           width: widgetWidth,
           height: widgetHeight,
-          color: const Color(0xFF2196F3),
+          color: Color(0xFF629460),
           child: InkWell(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => VeiculoPage(
-                    user: user,
-                    onVeiculoAdicionado: onVeiculoAdicionado,
-                  ),
-                ),
+                MaterialPageRoute(builder: (context) => AgendamentoPage()),
               );
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.directions_car,
+                  Icons.calendar_month_outlined,
                   size: widgetHeight * 0.5,
                   color: Colors.white,
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "Veículo",
+                  "Agendamento",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.white,

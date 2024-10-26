@@ -11,10 +11,10 @@ class LoginButton extends StatelessWidget {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
-        foregroundColor: const Color.fromARGB(255, 0, 128, 198), 
+        foregroundColor: const Color.fromARGB(255, 0, 128, 198),
         elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20), 
+          borderRadius: BorderRadius.circular(20),
         ),
       ),
       onPressed: () {
