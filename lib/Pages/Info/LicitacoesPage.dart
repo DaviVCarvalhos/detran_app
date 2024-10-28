@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'package:detranapp/Pages/Info/PDFViewPage.dart';
+import 'package:detranapp/Pages/PDFViewPage.dart';
 
 class LicitacoesPage extends StatelessWidget {
   const LicitacoesPage({super.key});
@@ -40,60 +37,8 @@ class LicitacoesPage extends StatelessWidget {
       },
     ];
 
-    return Scaffold(
-      body: Container(
-        color: Color(0xFFBEE5EB), // Cor de fundo do Container
-        child: ListView.builder(
-          padding: EdgeInsets.all(5.0),
-          itemCount: pdfs.length,
-          itemBuilder: (context, index) {
-            final pdf = pdfs[index];
-            return buildPdfCard(context, pdf['title']!,
-                pdf['path']!); // Constrói o cartão para cada PDF
-          },
-        ),
-      ),
+    return PDFViewPage(
+      pdfs: pdfs,
     );
-  }
-
-  Widget buildPdfCard(BuildContext context, String title, String pdfPath) {
-    return Card(
-        margin: EdgeInsets.symmetric(vertical: 5.0),
-        child: SizedBox(
-          height: 60.0,
-          child: ListTile(
-            title: Text(
-              title,
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),
-            ),
-            trailing: Icon(
-              Icons.picture_as_pdf,
-              color: Colors.red,
-            ),
-            onTap: () async {
-              final tempFilePath = await _copyAssetToLocal(pdfPath);
-              if (tempFilePath != null) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => PDFViewPage(filePath: tempFilePath),
-                  ),
-                );
-              }
-            },
-          ),
-        ));
-  }
-
-  Future<String?> _copyAssetToLocal(String assetPath) async {
-    try {
-      final byteData = await rootBundle.load(assetPath);
-      final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/${assetPath.split('/').last}');
-      await file.writeAsBytes(byteData.buffer.asUint8List());
-      return file.path;
-    } catch (e) {
-      print('Erro ao copiar o arquivo: $e');
-      return null;
-    }
   }
 }
