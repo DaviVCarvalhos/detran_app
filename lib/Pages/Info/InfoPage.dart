@@ -26,6 +26,9 @@ class _InfoPageState extends State<InfoPage> {
         leading: BackButton(
           color: Colors.white,
         ),
+         iconTheme: IconThemeData(
+    color: Colors.white, // Cor do ícone do Drawer
+  ),
         centerTitle: true,
       ),
       endDrawer: Drawer(

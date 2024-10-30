@@ -1,3 +1,4 @@
+import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:flutter/material.dart';
 
 class InfracoesPage extends StatelessWidget {
@@ -6,9 +7,12 @@ class InfracoesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFdc3545),
-        title: const Text('Consultar Infração'),
+      appBar:  AppBar(
+        title: DetranTitle(),
+        
+        backgroundColor:   const Color.fromARGB(255, 247, 19, 3),
+        leading: BackButton(color: Colors.white,),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
