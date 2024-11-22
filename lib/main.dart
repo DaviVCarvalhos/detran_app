@@ -1,3 +1,4 @@
+import 'package:detranapp/Pages/HomePage.dart';
 import 'package:detranapp/Pages/LoginPage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Detran App',
-      home: LoginPage(),
+      home: HomePage(),
     );
   }
 }
