@@ -48,6 +48,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
             onPressed: () {
               if (isUserLoggedIn()) {
                 setState(() {
@@ -56,6 +57,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
                     user: widget.user,
                   );
                   _tituloAtual = 'Consulta de Veículo';
+
                 });
               } else {
                 setState(() {
@@ -63,7 +65,9 @@ class _VeiculoPageState extends State<VeiculoPage> {
                 });
               }
             },
-            child: const Text('Consultar Veículo'),
+            child: const Text('Consultar Veículo',
+            style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
@@ -85,7 +89,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
           ),
           child: Text(
             _tituloAtual!,
-            // style: const TextStyle(color: Colors.white),
+             style: const TextStyle(color: Colors.white),
           ),
         ),
         leading: IconButton(
@@ -94,6 +98,9 @@ class _VeiculoPageState extends State<VeiculoPage> {
             Navigator.pop(context);
           },
         ),
+         iconTheme: IconThemeData(
+    color: Colors.white, // Cor do ícone do Drawer
+  ),
       ),
       endDrawer: Drawer(
         backgroundColor: const Color.fromARGB(255, 150, 199, 239),
@@ -116,7 +123,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
             ),
             ListTile(
               leading: isLoggedInIcon,
-              title: const Text('Meus Veículos'),
+              title: const Text("Meus Veículos"),
               onTap: () {
                 if (isUserLoggedIn()) {
                   setState(() {

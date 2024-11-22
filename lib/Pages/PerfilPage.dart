@@ -69,64 +69,66 @@ class _PerfilPageState extends State<PerfilPage> {
         centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 0, 128, 198),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _nomeController,
-              cursorColor: const Color.fromARGB(255, 52, 104, 248),
-              decoration: getTextFieldDecoration('Nome'),
-              enabled: _isEditing,
-            ),
-            TextFormField(
-              controller: _emailController,
-              cursorColor: const Color.fromARGB(255, 52, 104, 248),
-              decoration: getTextFieldDecoration('Email'),
-              enabled: _isEditing,
-            ),
-            TextFormField(
-              controller: _phoneController,
-              cursorColor: const Color.fromARGB(255, 52, 104, 248),
-              decoration: getTextFieldDecoration('Telefone'),
-              enabled: _isEditing,
-            ),
-            TextFormField(
-              controller: _cpfController,
-              cursorColor: const Color.fromARGB(255, 52, 104, 248),
-              decoration: getTextFieldDecoration('CPF'),
-              enabled: _isEditing,
-            ),
-            TextFormField(
-              controller: _datanascimentoController,
-              cursorColor: const Color.fromARGB(255, 52, 104, 248),
-              decoration: getTextFieldDecoration('Data de Nascimento'),
-              enabled: _isEditing,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 0, 128, 198),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nomeController,
+                cursorColor: const Color.fromARGB(255, 52, 104, 248),
+                decoration: getTextFieldDecoration('Nome'),
+                enabled: _isEditing,
               ),
-              onPressed: () {
-                setState(() {
-                  if (_isEditing) {
-                    widget.user.nome = _nomeController.text;
-                    widget.user.email = _emailController.text;
-                    widget.user.phone_number = _phoneController.text;
-                    widget.user.cpf = _cpfController.text;
-                    widget.user.datanascimento =
-                        DateTime.parse(_datanascimentoController.text);
-                  }
-                  _isEditing = !_isEditing;
-                });
-              },
-              child: Text(
-                _isEditing ? 'Salvar' : 'Editar',
-                style: TextStyle(color: Colors.white),
+              TextFormField(
+                controller: _emailController,
+                cursorColor: const Color.fromARGB(255, 52, 104, 248),
+                decoration: getTextFieldDecoration('Email'),
+                enabled: _isEditing,
               ),
-            ),
-          ],
+              TextFormField(
+                controller: _phoneController,
+                cursorColor: const Color.fromARGB(255, 52, 104, 248),
+                decoration: getTextFieldDecoration('Telefone'),
+                enabled: _isEditing,
+              ),
+              TextFormField(
+                controller: _cpfController,
+                cursorColor: const Color.fromARGB(255, 52, 104, 248),
+                decoration: getTextFieldDecoration('CPF'),
+                enabled: _isEditing,
+              ),
+              TextFormField(
+                controller: _datanascimentoController,
+                cursorColor: const Color.fromARGB(255, 52, 104, 248),
+                decoration: getTextFieldDecoration('Data de Nascimento'),
+                enabled: _isEditing,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 0, 128, 198),
+                ),
+                onPressed: () {
+                  setState(() {
+                    if (_isEditing) {
+                      widget.user.nome = _nomeController.text;
+                      widget.user.email = _emailController.text;
+                      widget.user.phone_number = _phoneController.text;
+                      widget.user.cpf = _cpfController.text;
+                      widget.user.datanascimento =
+                          DateTime.parse(_datanascimentoController.text);
+                    }
+                    _isEditing = !_isEditing;
+                  });
+                },
+                child: Text(
+                  _isEditing ? 'Salvar' : 'Editar',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

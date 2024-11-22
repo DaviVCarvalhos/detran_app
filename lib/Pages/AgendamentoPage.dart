@@ -1,3 +1,4 @@
+import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Para formatar a data.
 
@@ -117,14 +118,11 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back), // Ícone de seta para voltar.
-          onPressed: () {
-            Navigator.pop(context); // Retorna à tela anterior.
-          },
-        ),
-        title: const Text("Agendamento de Serviços"),
-        backgroundColor: Colors.blue,
+        title: DetranTitle(),
+        
+        backgroundColor:   Color(0xFF629460),
+        leading: BackButton(color: Colors.white,),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         // Adicionando o SingleChildScrollView aqui
@@ -270,8 +268,8 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                         borderRadius:
                             BorderRadius.circular(10), // Bordas arredondadas.
                       ),
-                      backgroundColor: Colors.blue, // Cor de fundo do botão
-                      foregroundColor: Colors.black,
+                      backgroundColor: Color(0xFF629460), // Cor de fundo do botão
+                      foregroundColor: Colors.white,
                     ),
                   ),
                 ),

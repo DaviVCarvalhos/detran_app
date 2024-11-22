@@ -64,27 +64,30 @@ List<Leilao> filteredLeiloes = [];
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onChanged: (value) {
-                _filterLeiloes(value); 
-              },
-              decoration: InputDecoration(
-                  labelText: 'Buscar Leilões',
-                  labelStyle: TextStyle(color: const Color.fromARGB(255, 52, 58, 64),),
-                  prefixIcon: Icon(Icons.search,
-                  color:const Color.fromARGB(255, 52, 58, 64),
-                  
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                    borderSide: BorderSide(color: const Color.fromARGB(255, 52, 58, 64), )
+            child: Padding(
+              padding: EdgeInsets.all(8),
+              child: TextField(
+                onChanged: (value) {
+                  _filterLeiloes(value); 
+                },
+                decoration: InputDecoration(
+                    labelText: 'Buscar Leilões',
+                    labelStyle: TextStyle(color: const Color.fromARGB(255, 52, 58, 64),),
+                    prefixIcon: Icon(Icons.search,
+                    color:const Color.fromARGB(255, 52, 58, 64),
                     
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                      borderSide: BorderSide(color: const Color.fromARGB(255, 52, 58, 64), )
+                      
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                      borderSide: BorderSide(color: const Color.fromARGB(255, 52, 58, 64), )
+                    )
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    borderSide: BorderSide(color: const Color.fromARGB(255, 52, 58, 64), )
-                  )
-                ),
+              ),
             ),
           ),
           Expanded(
@@ -113,10 +116,10 @@ class ListaLeilaoView extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Container(
-              color: Colors.black54, // Cor de fundo geral do card
+              color: Colors.black54, 
               child: Column(
                 children: [
-                  // Título com fundo separado
+                  
                   Container(
                      // Cor de fundo do título
                     padding: EdgeInsets.all(8.0),

@@ -55,21 +55,10 @@ class _HomePageState extends State<HomePage> {
           title: DetranTitle(),
           centerTitle: false,
           backgroundColor: const Color.fromARGB(255, 0, 128, 198),
-          bottom: const TabBar(
-            labelColor:
-                Colors.white, // Cor dos ícones e textos selecionados (branco)
-            unselectedLabelColor:
-                Colors.white60, // Cor dos ícones e textos não selecionados
-            indicatorColor: Colors.white, // Cor do indicador da aba
-            tabs: [
-              Tab(icon: Icon(Icons.home), text: 'Home'),
-              Tab(icon: Icon(Icons.person), text: 'Meu Perfil'),
-            ],
-          ),
         ),
         body: TabBarView(
           children: [
-            // Primeira aba: HomePage com GridView
+            
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: GridView.builder(
@@ -96,6 +85,20 @@ class _HomePageState extends State<HomePage> {
               user: user,
             ),
           ],
+        ),
+        bottomNavigationBar: Container(
+          color: const Color.fromARGB(255, 0, 128, 198),
+          child: const TabBar(
+            labelColor:
+                Colors.white, 
+            unselectedLabelColor:
+                Colors.white60, 
+            indicatorColor: Colors.white, 
+            tabs: [
+              Tab(icon: Icon(Icons.home), text: 'Home'),
+              Tab(icon: Icon(Icons.person), text: 'Meu Perfil'),
+            ],
+          ),
         ),
       ),
     );

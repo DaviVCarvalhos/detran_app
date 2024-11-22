@@ -1,4 +1,5 @@
 
+import 'package:detranapp/Pages/CadastroPage.dart';
 import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
- final _cpfCnpj = TextEditingController();
+ final email = TextEditingController();
   final _senha = TextEditingController();
   bool _exibirSenha = false;
 final _formKey = GlobalKey<FormState>();
@@ -47,13 +48,13 @@ final _formKey = GlobalKey<FormState>();
                         children: [
                           Row(
                             children: const [
-                              Text("CPF",
+                              Text("Email",
                               style: TextStyle(color: const Color.fromARGB(255, 0, 128, 198),),
                               ),
                             ],
                           ),
                           TextFormField(
-                            controller: _cpfCnpj,
+                            controller: email,
                             cursorColor: const Color.fromARGB(255, 52, 104, 248),
                             decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
@@ -65,15 +66,15 @@ final _formKey = GlobalKey<FormState>();
                              borderRadius: BorderRadius.all(Radius.circular(4)),
                              borderSide: BorderSide(color: Color.fromRGBO(7, 44, 252, 1), )
                                 ),
-                              hintText: "Inserir CPF",
+                              hintText: "Inserir email",
                               hintStyle: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
                               ),
                             ),
-                            validator: (cpfCnpj) { // validacao do campo
-                              if(cpfCnpj == null || cpfCnpj.isEmpty) {
-                                return 'Insira seu CPF ou CPNJ';
+                            validator: (email) { // validacao do campo
+                              if(email == null || email.isEmpty) {
+                                return 'Insira seu email';
                               }
                               return null; // se o campo for valido
                             },
@@ -134,21 +135,19 @@ final _formKey = GlobalKey<FormState>();
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Checkbox(
-                            value: false,
-                            onChanged: (bool? value) {},
-                          ),
-                          const Text(
-                            "Manter senha",
-                            style: TextStyle(fontSize: 11),
-                          ),
+                          
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CadastroPage()),
+        );
+                            },
                             child: const Text(
-                              "Esqueceu sua senha?",
+                              "Não Possui Conta? Cadastre-se!",
                               style: TextStyle(
                                 color: Color.fromARGB(255, 52, 104, 248),
-                                fontSize: 11,
+                                fontSize: 16,
                               ),
                             ),
                           ),
