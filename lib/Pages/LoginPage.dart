@@ -48,7 +48,7 @@ final _formKey = GlobalKey<FormState>();
                         children: [
                           Row(
                             children: const [
-                              Text("CPF",
+                              Text("Email",
                               style: TextStyle(color: const Color.fromARGB(255, 0, 128, 198),),
                               ),
                             ],
@@ -66,7 +66,7 @@ final _formKey = GlobalKey<FormState>();
                              borderRadius: BorderRadius.all(Radius.circular(4)),
                              borderSide: BorderSide(color: Color.fromRGBO(7, 44, 252, 1), )
                                 ),
-                              hintText: "Inserir CPF",
+                              hintText: "Inserir email",
                               hintStyle: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey,
@@ -74,7 +74,7 @@ final _formKey = GlobalKey<FormState>();
                             ),
                             validator: (email) { // validacao do campo
                               if(email == null || email.isEmpty) {
-                                return 'Insira seu CPF ou CPNJ';
+                                return 'Insira seu email';
                               }
                               return null; // se o campo for valido
                             },
