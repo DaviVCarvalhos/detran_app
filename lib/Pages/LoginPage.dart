@@ -23,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
         email: email.text.trim(),
         password: _senha.text.trim(),
       );
-      // Login bem-sucedido, redireciona para a página principal ou outra tela
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Bem-vindo, ${userCredential.user?.email}!")),
       );
