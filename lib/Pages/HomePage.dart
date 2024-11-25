@@ -19,23 +19,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   User user = User(
+      id: '1',
       cpf: '12345678900',
       datanascimento: DateTime(1990, 5, 10),
       nome: 'Guts',
       email: 'GRIIFTHHHHHH@gmail.com',
       phone_number: '11999999999');
 
-  void adicionarVeiculo(Veiculo veiculo) {
-    setState(() {
-      user.veiculos.add(veiculo);
-      print(veiculo);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgets = [
-      VeiculoWidget(user: user, onVeiculoAdicionado: adicionarVeiculo),
+      VeiculoWidget(user: user),
       InfracoesWidget(),
       InfoWidget(),
       LeilaoWidget(),
@@ -58,7 +52,6 @@ class _HomePageState extends State<HomePage> {
         ),
         body: TabBarView(
           children: [
-            
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: GridView.builder(
@@ -89,11 +82,9 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar: Container(
           color: const Color.fromARGB(255, 0, 128, 198),
           child: const TabBar(
-            labelColor:
-                Colors.white, 
-            unselectedLabelColor:
-                Colors.white60, 
-            indicatorColor: Colors.white, 
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white60,
+            indicatorColor: Colors.white,
             tabs: [
               Tab(icon: Icon(Icons.home), text: 'Home'),
               Tab(icon: Icon(Icons.person), text: 'Meu Perfil'),

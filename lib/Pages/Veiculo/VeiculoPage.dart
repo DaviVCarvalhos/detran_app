@@ -3,17 +3,12 @@ import 'package:detranapp/Pages/LoginPage.dart';
 import 'package:detranapp/Pages/Veiculo/MeusVeiculosPage.dart';
 import 'package:detranapp/models/User.dart';
 import 'package:detranapp/models/Veiculo.dart';
+import 'package:detranapp/models/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class VeiculoPage extends StatefulWidget {
-  final User user;
-  final Function(Veiculo) onVeiculoAdicionado;
-
-  const VeiculoPage({
-    super.key,
-    required this.user,
-    required this.onVeiculoAdicionado,
-  });
+  const VeiculoPage({super.key, required user});
 
   @override
   State<VeiculoPage> createState() => _VeiculoPageState();
@@ -26,8 +21,10 @@ class _VeiculoPageState extends State<VeiculoPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.user.veiculos.isNotEmpty) {
-      _conteudoAtual = MeusVeiculosPage(veiculos: widget.user.veiculos);
+    final user = Provider.of<UserProvider>(context, listen: false).user;
+
+    if (user?.veiculos.isNotEmpty ?? false) {
+      _conteudoAtual = MeusVeiculosPage(veiculos: user!.veiculos);
       _tituloAtual = 'Meus Veículos';
     } else {
       _conteudoAtual = _buildEmptyState();
@@ -50,23 +47,23 @@ class _VeiculoPageState extends State<VeiculoPage> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
             onPressed: () {
-              if (isUserLoggedIn()) {
+              final userProvider =
+                  Provider.of<UserProvider>(context, listen: false);
+              if (userProvider.user != null) {
                 setState(() {
-                  _conteudoAtual = ConsultarVeiculoPage(
-                    onVeiculoAdicionado: widget.onVeiculoAdicionado,
-                    user: widget.user,
-                  );
+                  _conteudoAtual = ConsultarVeiculoPage();
                   _tituloAtual = 'Consulta de Veículo';
-
                 });
               } else {
                 setState(() {
                   _conteudoAtual = const LoginPage();
+                  _tituloAtual = 'Login';
                 });
               }
             },
-            child: const Text('Consultar Veículo',
-            style: TextStyle(color: Colors.white),
+            child: const Text(
+              'Consultar Veículo',
+              style: TextStyle(color: Colors.white),
             ),
           ),
         ],
@@ -89,7 +86,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
           ),
           child: Text(
             _tituloAtual!,
-             style: const TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         ),
         leading: IconButton(
@@ -98,9 +95,9 @@ class _VeiculoPageState extends State<VeiculoPage> {
             Navigator.pop(context);
           },
         ),
-         iconTheme: IconThemeData(
-    color: Colors.white, // Cor do ícone do Drawer
-  ),
+        iconTheme: IconThemeData(
+          color: Colors.white, // Cor do ícone do Drawer
+        ),
       ),
       endDrawer: Drawer(
         backgroundColor: const Color.fromARGB(255, 150, 199, 239),
@@ -125,11 +122,13 @@ class _VeiculoPageState extends State<VeiculoPage> {
               leading: isLoggedInIcon,
               title: const Text("Meus Veículos"),
               onTap: () {
-                if (isUserLoggedIn()) {
+                final user =
+                    Provider.of<UserProvider>(context, listen: false).user;
+                if (isUserLoggedIn() && user != null) {
                   setState(() {
-                    if (widget.user.veiculos.isNotEmpty) {
+                    if (user.veiculos.isNotEmpty) {
                       _conteudoAtual =
-                          MeusVeiculosPage(veiculos: widget.user.veiculos);
+                          MeusVeiculosPage(veiculos: user.veiculos);
                       _tituloAtual = 'Meus Veículos';
                     } else {
                       _conteudoAtual = _buildEmptyState();
@@ -148,12 +147,11 @@ class _VeiculoPageState extends State<VeiculoPage> {
               leading: isLoggedInIcon,
               title: const Text('Consulta de Veículo'),
               onTap: () {
-                if (isUserLoggedIn()) {
+                final user =
+                    Provider.of<UserProvider>(context, listen: false).user;
+                if (isUserLoggedIn() && user != null) {
                   setState(() {
-                    _conteudoAtual = ConsultarVeiculoPage(
-                      onVeiculoAdicionado: widget.onVeiculoAdicionado,
-                      user: widget.user,
-                    );
+                    _conteudoAtual = ConsultarVeiculoPage();
                     _tituloAtual = 'Consulta de Veículo';
                   });
                 } else {
@@ -294,8 +292,6 @@ class _VeiculoPageState extends State<VeiculoPage> {
   }
 
   bool isUserLoggedIn() {
-    // Verificação de login (pode ser substituída pela lógica real)
-    //if(user != null)
-    return true; // ou true, dependendo do estado de login
+    return Provider.of<UserProvider>(context, listen: false).user != null;
   }
 }

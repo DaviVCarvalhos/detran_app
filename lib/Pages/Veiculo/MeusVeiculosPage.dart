@@ -39,7 +39,7 @@ class MeusVeiculosPage extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return VeiculoDetails(veiculo: veiculo);
+        return VeiculoDetails(veiculo);
       },
     );
   }

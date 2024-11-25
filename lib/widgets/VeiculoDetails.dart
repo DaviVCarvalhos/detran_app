@@ -2,9 +2,9 @@ import 'package:detranapp/models/Veiculo.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoDetails extends StatelessWidget {
-  final Veiculo veiculo;
+  late final Veiculo veiculo;
 
-  const VeiculoDetails({Key? key, required this.veiculo}) : super(key: key);
+  VeiculoDetails(Veiculo veiculo);
 
   @override
   Widget build(BuildContext context) {

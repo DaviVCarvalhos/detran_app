@@ -5,12 +5,10 @@ import 'package:flutter/material.dart';
 
 class VeiculoWidget extends StatelessWidget {
   final User user;
-  final Function(Veiculo) onVeiculoAdicionado;
 
   const VeiculoWidget({
     super.key,
     required this.user,
-    required this.onVeiculoAdicionado,
   });
 
   @override
@@ -30,8 +28,7 @@ class VeiculoWidget extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => VeiculoPage(
-                    user: user,
-                    onVeiculoAdicionado: onVeiculoAdicionado,
+                    user: null,
                   ),
                 ),
               );

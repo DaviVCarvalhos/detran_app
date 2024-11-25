@@ -1,74 +1,65 @@
 import 'package:detranapp/models/User.dart';
 import 'package:detranapp/models/Veiculo.dart';
+import 'package:detranapp/models/veiculo_provider.dart';
 import 'package:detranapp/widgets/VeiculoDetails.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ConsultarVeiculoPage extends StatefulWidget {
-  final Function(Veiculo) onVeiculoAdicionado; // Callback
-  final User user; // Usuário logado
-
-  const ConsultarVeiculoPage(
-      {Key? key, required this.onVeiculoAdicionado, required this.user})
-      : super(key: key);
+  const ConsultarVeiculoPage({super.key});
 
   @override
-  _ConsultarVeiculoPageState createState() => _ConsultarVeiculoPageState();
+  State<ConsultarVeiculoPage> createState() => _ConsultarVeiculoPageState();
 }
 
 class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
-  final TextEditingController placaController = TextEditingController();
-  final TextEditingController renavamController = TextEditingController();
-  Veiculo? veiculo;
-
-  void consultarVeiculo() {
-    final String placa = placaController.text;
-    final String renavam = renavamController.text;
-
-    setState(() {
-      veiculo = Veiculo(
-          placa: placa,
-          renavam: renavam,
-          modelo: 'VW JETTA 2.0T (Importado)',
-          anoFabricacao: '2013',
-          nomeProprietario: 'Guts');
-    });
-  }
-
-  void adicionarVeiculo() {
-    if (veiculo != null) {
-      widget.onVeiculoAdicionado(veiculo!); // Chama o callback
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${veiculo!.modelo} adicionado com sucesso!')),
-      );
-    }
-  }
-
+  late User user;
   @override
   Widget build(BuildContext context) {
+    final veiculoProvider = Provider.of<VeiculoProvider>(context);
+    final placaController = TextEditingController();
+    final renavamController = TextEditingController();
+
     return SingleChildScrollView(
       child: Stack(
         children: [
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
+              children: [
                 const Text('Placa',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 TextField(
-                    controller: placaController,
-                    decoration: InputDecoration(border: OutlineInputBorder())),
+                  controller: placaController,
+                  decoration:
+                      const InputDecoration(border: OutlineInputBorder()),
+                ),
                 const SizedBox(height: 16),
                 const Text('Renavam',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 TextField(
-                    controller: renavamController,
-                    decoration: InputDecoration(border: OutlineInputBorder())),
+                  controller: renavamController,
+                  decoration:
+                      const InputDecoration(border: OutlineInputBorder()),
+                ),
                 const SizedBox(height: 32),
                 Center(
                   child: ElevatedButton(
-                    onPressed: consultarVeiculo,
+                    onPressed: () async {
+                      await veiculoProvider.pesquisarVeiculo(
+                        placaController.text,
+                        renavamController.text,
+                      );
+                      if (veiculoProvider.veiculoPesquisado == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Veículo não encontrado.')),
+                        );
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       padding: const EdgeInsets.symmetric(
@@ -78,34 +69,39 @@ class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
                         style: TextStyle(color: Colors.white, fontSize: 16)),
                   ),
                 ),
-                if (veiculo != null) ...[
+                if (veiculoProvider.veiculoPesquisado != null) ...[
                   const SizedBox(height: 32),
                   const Text('Detalhes do Veículo:',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  VeiculoDetails(veiculo: veiculo!),
+                  if (veiculoProvider.veiculoPesquisado != null)
+                    VeiculoDetails(
+                        veiculoProvider.veiculoPesquisado! as Veiculo),
                 ],
               ],
             ),
           ),
-          if (veiculo != null &&
-              veiculo!.nomeProprietario ==
-                  widget.user
-                      .nome) //Futuramente sera um usuario e verificara nome e cpf para poder adicionar
+          if (veiculoProvider.veiculoPesquisado != null &&
+              veiculoProvider.veiculoPesquisado!.nomeProprietario == user.nome)
             Positioned(
               right: 16,
               bottom: 16,
-              child: SizedBox(
-                width: 56,
-                height: 56,
-                child: FloatingActionButton(
-                  onPressed: adicionarVeiculo,
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(Icons.add),
+              child: FloatingActionButton(
+                onPressed: () {
+                  veiculoProvider.adicionarVeiculoAoUsuario(
+                      user.id as String, veiculoProvider.veiculoPesquisado!);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          '${veiculoProvider.veiculoPesquisado!.modelo} adicionado com sucesso!'),
+                    ),
+                  );
+                },
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
                 ),
+                child: const Icon(Icons.add),
               ),
             ),
         ],
