@@ -1,6 +1,9 @@
+import 'package:detranapp/models/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:detranapp/Pages/CadastroPage.dart';
+import 'package:provider/provider.dart';
+
+import 'package:detranapp/Pages/HomePage.dart'; // Certifique-se de importar a HomePage
 import 'package:detranapp/widgets/DetranTitle.dart';
 
 class LoginPage extends StatefulWidget {
@@ -24,13 +27,20 @@ class _LoginPageState extends State<LoginPage> {
         password: _senha.text.trim(),
       );
 
+      // Atualiza o estado do UserProvider
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.login(userCredential.user!);
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Bem-vindo, ${userCredential.user?.email}!")),
       );
-      // Exemplo de navegação
-      Navigator.pushReplacementNamed(context, '/home');
+
+      // Redireciona para a HomePage
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
     } on FirebaseAuthException catch (e) {
-      // Exibe erros de autenticação
       String message;
       if (e.code == 'user-not-found') {
         message = 'Usuário não encontrado.';
@@ -141,24 +151,6 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text(
                         "Entrar",
                         style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CadastroPage(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "Não Possui Conta? Cadastre-se!",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 52, 104, 248),
-                          fontSize: 16,
-                        ),
                       ),
                     ),
                   ],

@@ -1,13 +1,16 @@
-import 'package:detranapp/Pages/LoginPage.dart';
+import 'package:detranapp/models/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:detranapp/Pages/LoginPage.dart';
 
 class LoginButton extends StatelessWidget {
-  const LoginButton({
-    super.key,
-  });
+  const LoginButton({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Obtenha o estado do UserProvider
+    final userProvider = Provider.of<UserProvider>(context);
+
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
@@ -18,13 +21,25 @@ class LoginButton extends StatelessWidget {
         ),
       ),
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
+        if (userProvider.isLoggedIn) {
+          // Realizar logout
+          userProvider.logout();
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Você saiu com sucesso!")),
+          );
+        } else {
+          // Navegar para a página de login
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoginPage()),
+          );
+        }
       },
-      icon: const Icon(Icons.login, size: 20),
-      label: const Text('LOGIN'),
+      icon: Icon(
+        userProvider.isLoggedIn ? Icons.logout : Icons.login,
+        size: 20,
+      ),
+      label: Text(userProvider.isLoggedIn ? 'LOGOUT' : 'LOGIN'),
     );
   }
 }

@@ -11,7 +11,7 @@ import 'package:detranapp/widgets/VeiculoWidget.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -29,17 +29,20 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgets = [
-      VeiculoWidget(user: user),
       InfracoesWidget(),
       InfoWidget(),
       LeilaoWidget(),
-      AgendamentoWidget()
+      AgendamentoWidget(),
     ];
 
     return DefaultTabController(
       length: 2, // Número de abas (Home e Perfil)
       child: Scaffold(
         appBar: AppBar(
+          // Força o leading a ser null para garantir que o botão de voltar não apareça
+          leading: null,
+          automaticallyImplyLeading:
+              false, // Impede a lógica automática de adicionar o botão
           actions: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -73,10 +76,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            // Segunda aba: Página de "Meu Perfil"
-            PerfilPage(
-              user: user,
-            ),
+            PerfilPage(user: user),
           ],
         ),
         bottomNavigationBar: Container(
