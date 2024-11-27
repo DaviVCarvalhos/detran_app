@@ -1,6 +1,7 @@
 import 'package:detranapp/Buttons/LoginButton.dart';
 import 'package:detranapp/Pages/PerfilPage.dart';
-import 'package:detranapp/models/User.dart';
+import 'package:detranapp/models/App_User.dart';
+
 import 'package:detranapp/models/Veiculo.dart';
 import 'package:detranapp/widgets/AgendamentoWidget.dart';
 import 'package:detranapp/widgets/DetranTitle.dart';
@@ -18,7 +19,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  User user = User(
+  App_User user = App_User(
       id: '1',
       cpf: '12345678900',
       datanascimento: DateTime(1990, 5, 10),

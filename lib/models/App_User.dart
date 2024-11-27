@@ -23,8 +23,8 @@ class App_User {
       cpf: map['cpf'],
       nome: map['nome'],
       email: map['email'],
-      phone_number: map['phone_number'],
-      datanascimento: DateTime.parse(map['datanascimento']),
+      phone_number: map['telefone'],
+      datanascimento: DateTime.parse(map['dataNascimento']),
     );
   }
 
@@ -34,8 +34,8 @@ class App_User {
       'nome': nome,
       'cpf': cpf,
       'email': email,
-      'phone_number': phone_number,
-      'datanascimento': datanascimento.toIso8601String(),
+      'telefone': phone_number,
+      'dataNascimento': datanascimento.toIso8601String(),
     };
   }
 }

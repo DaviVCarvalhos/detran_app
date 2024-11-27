@@ -1,8 +1,8 @@
-import 'package:detranapp/models/User.dart';
+import 'package:detranapp/models/App_User.dart';
 import 'package:flutter/material.dart';
 
 class PerfilPage extends StatefulWidget {
-  final User user;
+  final App_User user;
 
   PerfilPage({required this.user});
 

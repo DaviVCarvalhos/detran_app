@@ -1,4 +1,4 @@
-import 'package:detranapp/models/User.dart';
+import 'package:detranapp/models/App_User.dart';
 import 'package:detranapp/models/Veiculo.dart';
 import 'package:detranapp/models/veiculo_provider.dart';
 import 'package:detranapp/widgets/VeiculoDetails.dart';
@@ -13,7 +13,7 @@ class ConsultarVeiculoPage extends StatefulWidget {
 }
 
 class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
-  late User user;
+  late App_User user;
   @override
   Widget build(BuildContext context) {
     final veiculoProvider = Provider.of<VeiculoProvider>(context);

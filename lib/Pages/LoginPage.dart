@@ -1,4 +1,5 @@
 import 'package:detranapp/Pages/CadastroPage.dart';
+import 'package:detranapp/models/App_User.dart';
 import 'package:detranapp/models/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -28,13 +29,17 @@ class _LoginPageState extends State<LoginPage> {
         password: _senha.text.trim(),
       );
 
+      // Acessa o UserProvider para armazenar as informações do usuário
       final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+      // Chama o método de login no UserProvider, passando o usuário autenticado
       userProvider.login(userCredential.user!);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Bem-vindo, ${userCredential.user?.email}!")),
       );
 
+      // Redireciona para a HomePage após o login
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
