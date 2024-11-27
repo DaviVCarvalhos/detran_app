@@ -1,4 +1,5 @@
-import 'package:detranapp/widgets/DetranTitle.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class CadastroPage extends StatefulWidget {
@@ -15,13 +16,15 @@ class _CadastroPageState extends State<CadastroPage> {
   final _emailController = TextEditingController();
   final _senhaController = TextEditingController();
   final _confirmarSenhaController = TextEditingController();
+  final _telefoneController = TextEditingController();
+  final _dataNascimentoController = TextEditingController();
   bool _exibirSenha = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: DetranTitle(),
+        title: Text("Cadastro"),
         centerTitle: true,
         leading: BackButton(color: Colors.white),
         backgroundColor: const Color.fromARGB(255, 0, 128, 198),
@@ -34,16 +37,12 @@ class _CadastroPageState extends State<CadastroPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Image.asset('images/detranlogo.jpg'),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _nomeController,
                   decoration: const InputDecoration(
                     labelText: "Nome",
                     hintText: "Digite seu nome completo",
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 0, 128, 198)),
-                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -58,9 +57,6 @@ class _CadastroPageState extends State<CadastroPage> {
                   decoration: const InputDecoration(
                     labelText: "CPF",
                     hintText: "Digite seu CPF",
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 0, 128, 198)),
-                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -75,9 +71,6 @@ class _CadastroPageState extends State<CadastroPage> {
                   decoration: const InputDecoration(
                     labelText: "E-mail",
                     hintText: "Digite seu e-mail",
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 0, 128, 198)),
-                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -93,9 +86,6 @@ class _CadastroPageState extends State<CadastroPage> {
                   decoration: InputDecoration(
                     labelText: "Senha",
                     hintText: "Digite sua senha",
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 0, 128, 198)),
-                    ),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _exibirSenha
@@ -126,9 +116,6 @@ class _CadastroPageState extends State<CadastroPage> {
                   decoration: InputDecoration(
                     labelText: "Confirmar Senha",
                     hintText: "Confirme sua senha",
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color.fromARGB(255, 0, 128, 198)),
-                    ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -141,25 +128,91 @@ class _CadastroPageState extends State<CadastroPage> {
                   },
                 ),
                 const SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // Ação de cadastro
-                        print("Cadastro realizado com sucesso!");
+                TextFormField(
+                  controller: _telefoneController,
+                  decoration: const InputDecoration(
+                    labelText: "Telefone",
+                    hintText: "Digite seu telefone",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira seu telefone';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: _dataNascimentoController,
+                  decoration: const InputDecoration(
+                    labelText: "Data de Nascimento",
+                    hintText: "Digite sua data de nascimento",
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira sua data de nascimento';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      try {
+                        // Registra o usuário no Firebase Authentication
+                        UserCredential userCredential = await FirebaseAuth
+                            .instance
+                            .createUserWithEmailAndPassword(
+                          email: _emailController.text.trim(),
+                          password: _senhaController.text.trim(),
+                        );
+
+                        // Obtém o ID do usuário registrado
+                        String userId = userCredential.user!.uid;
+
+                        // Salva dados adicionais no Realtime Database
+                        DatabaseReference usersRef =
+                            FirebaseDatabase.instance.ref('users');
+                        await usersRef.child(userId).set({
+                          'nome': _nomeController.text.trim(),
+                          'cpf': _cpfController.text.trim(),
+                          'email': _emailController.text.trim(),
+                          'telefone': _telefoneController.text.trim(),
+                          'dataNascimento':
+                              _dataNascimentoController.text.trim(),
+                        });
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text("Usuário registrado com sucesso!")),
+                        );
+
+                        _formKey.currentState!.reset();
+                        _nomeController.clear();
+                        _cpfController.clear();
+                        _emailController.clear();
+                        _senhaController.clear();
+                        _confirmarSenhaController.clear();
+                        _telefoneController.clear();
+                        _dataNascimentoController.clear();
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Erro ao registrar: $e")),
+                        );
                       }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 0, 128, 198),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 10,
-                      ),
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 0, 128, 198),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 30,
+                      vertical: 10,
                     ),
-                    child: const Text(
-                      "Cadastrar",
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  ),
+                  child: const Text(
+                    "Cadastrar",
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],

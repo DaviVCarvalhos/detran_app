@@ -1,9 +1,10 @@
+import 'package:detranapp/Pages/CadastroPage.dart';
 import 'package:detranapp/models/user_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:detranapp/Pages/HomePage.dart'; // Certifique-se de importar a HomePage
+import 'package:detranapp/Pages/HomePage.dart';
 import 'package:detranapp/widgets/DetranTitle.dart';
 
 class LoginPage extends StatefulWidget {
@@ -27,7 +28,6 @@ class _LoginPageState extends State<LoginPage> {
         password: _senha.text.trim(),
       );
 
-      // Atualiza o estado do UserProvider
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       userProvider.login(userCredential.user!);
 
@@ -35,7 +35,6 @@ class _LoginPageState extends State<LoginPage> {
         SnackBar(content: Text("Bem-vindo, ${userCredential.user?.email}!")),
       );
 
-      // Redireciona para a HomePage
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
@@ -153,6 +152,22 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CadastroPage(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "Não Possui Conta? Cadastre-se!",
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 52, 104, 248),
+                            fontSize: 16,
+                          ),
+                        ))
                   ],
                 ),
               ],
