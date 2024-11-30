@@ -1,4 +1,3 @@
-import 'package:detranapp/models/Veiculo.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,8 +8,12 @@ class UserProvider with ChangeNotifier {
   User? get currentUser => _currentUser;
   bool get isLoggedIn => _currentUser != null;
 
-  void login(User user) {
+  App_User? _app_user;
+  App_User? get app_user => _app_user;
+
+  void login(User user) async {
     _currentUser = user;
+    _app_user = await getUserDataFromDatabase();
     notifyListeners();
   }
 
@@ -34,8 +37,9 @@ class UserProvider with ChangeNotifier {
 
       if (snapshot.value != null) {
         final data = snapshot.value as Map<dynamic, dynamic>;
-
-        return App_User.fromMap(Map<String, dynamic>.from(data));
+        App_User app_user =
+            App_User.fromMap(uid, Map<String, dynamic>.from(data));
+        return app_user;
       } else {
         return null;
       }

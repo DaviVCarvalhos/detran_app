@@ -2,7 +2,6 @@ import 'package:detranapp/Buttons/LoginButton.dart';
 import 'package:detranapp/Pages/PerfilPage.dart';
 import 'package:detranapp/models/App_User.dart';
 
-import 'package:detranapp/models/Veiculo.dart';
 import 'package:detranapp/widgets/AgendamentoWidget.dart';
 import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:detranapp/widgets/InfoWidget.dart';
@@ -34,6 +33,7 @@ class _HomePageState extends State<HomePage> {
       InfoWidget(),
       LeilaoWidget(),
       AgendamentoWidget(),
+      VeiculoWidget()
     ];
 
     return DefaultTabController(

@@ -17,10 +17,10 @@ class App_User {
   DateTime datanascimento;
   List<Veiculo> veiculos = [];
 
-  factory App_User.fromMap(Map<String, dynamic> map) {
+  factory App_User.fromMap(String id, Map<String, dynamic> map) {
     try {
       return App_User(
-        id: map['id'] ?? '',
+        id: id,
         cpf: map['cpf'] ?? '',
         nome: map['nome'] ?? '',
         email: map['email'] ?? '',
