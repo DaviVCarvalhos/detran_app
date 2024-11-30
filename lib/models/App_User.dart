@@ -18,14 +18,19 @@ class App_User {
   List<Veiculo> veiculos = [];
 
   factory App_User.fromMap(Map<String, dynamic> map) {
-    return App_User(
-      id: map['id'],
-      cpf: map['cpf'],
-      nome: map['nome'],
-      email: map['email'],
-      phone_number: map['telefone'],
-      datanascimento: DateTime.parse(map['dataNascimento']),
-    );
+    try {
+      return App_User(
+        id: map['id'] ?? '',
+        cpf: map['cpf'] ?? '',
+        nome: map['nome'] ?? '',
+        email: map['email'] ?? '',
+        phone_number: map['telefone'] ?? '',
+        datanascimento: DateTime.tryParse(map['dataNascimento'] ?? '') ??
+            DateTime(1970, 1, 1),
+      );
+    } catch (e) {
+      throw Exception('Erro ao converter os dados do usuário: $e');
+    }
   }
 
   Map<String, dynamic> toMap() {

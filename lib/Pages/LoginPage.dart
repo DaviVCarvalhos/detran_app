@@ -35,6 +35,12 @@ class _LoginPageState extends State<LoginPage> {
       // Chama o método de login no UserProvider, passando o usuário autenticado
       userProvider.login(userCredential.user!);
 
+      App_User? appUser = await userProvider.getUserDataFromDatabase();
+
+      if (appUser != null) {
+        print(appUser.nome);
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Bem-vindo, ${userCredential.user?.email}!")),
       );
