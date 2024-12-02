@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> {
       InfoWidget(),
       LeilaoWidget(),
       AgendamentoWidget(),
+      VeiculoWidget()
     ];
 
     if (isLoading) {
