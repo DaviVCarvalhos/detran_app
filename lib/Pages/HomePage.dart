@@ -1,15 +1,15 @@
 import 'package:detranapp/Buttons/LoginButton.dart';
 import 'package:detranapp/Pages/PerfilPage.dart';
 import 'package:detranapp/models/App_User.dart';
+import 'package:detranapp/models/user_provider.dart';
 
-import 'package:detranapp/models/Veiculo.dart';
 import 'package:detranapp/widgets/AgendamentoWidget.dart';
 import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:detranapp/widgets/InfoWidget.dart';
 import 'package:detranapp/widgets/InfracoesWidget.dart';
 import 'package:detranapp/widgets/LeilaoWidget.dart';
-import 'package:detranapp/widgets/VeiculoWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,13 +19,33 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  App_User user = App_User(
-      id: '1',
-      cpf: '12345678900',
-      datanascimento: DateTime(1990, 5, 10),
-      nome: 'Guts',
-      email: 'GRIIFTHHHHHH@gmail.com',
-      phone_number: '11999999999');
+  App_User? user;
+  bool isLoading = true;
+
+  final App_User defaultUser = App_User(
+    id: '0',
+    cpf: '00000000000',
+    datanascimento: DateTime(2000, 1, 1),
+    nome: 'Visitante',
+    email: 'visitante@exemplo.com',
+    phone_number: '0000000000',
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUser();
+  }
+
+  Future<void> _fetchUser() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final fetchedUser = await userProvider.getUserDataFromDatabase();
+
+    setState(() {
+      user = fetchedUser ?? defaultUser;
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +56,18 @@ class _HomePageState extends State<HomePage> {
       AgendamentoWidget(),
     ];
 
+    if (isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return DefaultTabController(
       length: 2, // Número de abas (Home e Perfil)
       child: Scaffold(
         appBar: AppBar(
-          // Força o leading a ser null para garantir que o botão de voltar não apareça
           leading: null,
-          automaticallyImplyLeading:
-              false, // Impede a lógica automática de adicionar o botão
+          automaticallyImplyLeading: false,
           actions: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -77,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            PerfilPage(user: user),
+            PerfilPage(user: user!), // Passa o user, que pode ser o default
           ],
         ),
         bottomNavigationBar: Container(

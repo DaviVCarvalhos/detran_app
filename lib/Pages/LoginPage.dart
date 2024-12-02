@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       App_User? appUser = await userProvider.getUserDataFromDatabase();
 
       if (appUser != null) {
-        print(appUser.nome);
+        print(appUser.cpf);
       }
 
       ScaffoldMessenger.of(context).showSnackBar(

@@ -2,7 +2,7 @@ import 'package:detranapp/models/App_User.dart';
 import 'package:flutter/material.dart';
 
 class PerfilPage extends StatefulWidget {
-  final App_User user;
+  final App_User? user;
 
   PerfilPage({required this.user});
 
@@ -18,26 +18,33 @@ class _PerfilPageState extends State<PerfilPage> {
   late TextEditingController _datanascimentoController;
 
   bool _isEditing = false;
+  bool _userIsNull = false;
 
   @override
   void initState() {
     super.initState();
 
-    _nomeController = TextEditingController(text: widget.user.nome);
-    _emailController = TextEditingController(text: widget.user.email);
-    _phoneController = TextEditingController(text: widget.user.phone_number);
-    _cpfController = TextEditingController(text: widget.user.cpf);
-    _datanascimentoController = TextEditingController(
-        text: widget.user.datanascimento.toIso8601String().split('T').first);
+    if (widget.user == null) {
+      _userIsNull = true;
+    } else {
+      _nomeController = TextEditingController(text: widget.user!.nome);
+      _emailController = TextEditingController(text: widget.user!.email);
+      _phoneController = TextEditingController(text: widget.user!.phone_number);
+      _cpfController = TextEditingController(text: widget.user!.cpf);
+      _datanascimentoController = TextEditingController(
+          text: widget.user!.datanascimento.toIso8601String().split('T').first);
+    }
   }
 
   @override
   void dispose() {
-    _nomeController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _cpfController.dispose();
-    _datanascimentoController.dispose();
+    if (!_userIsNull) {
+      _nomeController.dispose();
+      _emailController.dispose();
+      _phoneController.dispose();
+      _cpfController.dispose();
+      _datanascimentoController.dispose();
+    }
     super.dispose();
   }
 
@@ -60,6 +67,29 @@ class _PerfilPageState extends State<PerfilPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_userIsNull) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            'Meu Perfil',
+            style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: true,
+          backgroundColor: const Color.fromARGB(255, 0, 128, 198),
+        ),
+        body: const Center(
+          child: Text(
+            'É necessário fazer login para acessar o perfil do usuário.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black54,
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -112,11 +142,11 @@ class _PerfilPageState extends State<PerfilPage> {
                 onPressed: () {
                   setState(() {
                     if (_isEditing) {
-                      widget.user.nome = _nomeController.text;
-                      widget.user.email = _emailController.text;
-                      widget.user.phone_number = _phoneController.text;
-                      widget.user.cpf = _cpfController.text;
-                      widget.user.datanascimento =
+                      widget.user!.nome = _nomeController.text;
+                      widget.user!.email = _emailController.text;
+                      widget.user!.phone_number = _phoneController.text;
+                      widget.user!.cpf = _cpfController.text;
+                      widget.user!.datanascimento =
                           DateTime.parse(_datanascimentoController.text);
                     }
                     _isEditing = !_isEditing;
