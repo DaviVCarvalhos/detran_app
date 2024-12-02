@@ -1,5 +1,7 @@
 import 'package:detranapp/models/App_User.dart';
+import 'package:detranapp/models/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PerfilPage extends StatefulWidget {
   final App_User? user;
@@ -67,6 +69,11 @@ class _PerfilPageState extends State<PerfilPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    if (userProvider.isLoggedIn == false) {
+      _userIsNull = true;
+    }
+
     if (_userIsNull) {
       return Center(
         child: Column(
