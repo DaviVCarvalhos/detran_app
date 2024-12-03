@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('en', ''), // Inglês
-        Locale('pt', 'BR'), // Português do Brasil
+        Locale('en', ''),
+        Locale('pt', 'BR'),
       ],
       home: HomePage(),
     );

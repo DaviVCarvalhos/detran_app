@@ -20,6 +20,7 @@ class _CadastroPageState extends State<CadastroPage> {
   final _telefoneController = TextEditingController();
   final _dataNascimentoController = TextEditingController();
   bool _exibirSenha = false;
+  bool _isLoading = false; // Variável para controlar o carregamento
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +160,21 @@ class _CadastroPageState extends State<CadastroPage> {
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _isLoading = true; // Ativa o carregamento
+                        });
+
+                        // Exibe o anel de carregamento enquanto o cadastro está em andamento
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        );
+
                         try {
                           // Registra o usuário no Firebase Authentication
                           UserCredential userCredential = await FirebaseAuth
@@ -201,6 +217,13 @@ class _CadastroPageState extends State<CadastroPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Erro ao registrar: $e")),
                           );
+                        } finally {
+                          setState(() {
+                            _isLoading = false; // Desativa o carregamento
+                          });
+
+                          // Fecha o diálogo de carregamento
+                          Navigator.pop(context);
                         }
                       }
                     },
