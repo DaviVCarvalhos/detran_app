@@ -1,3 +1,4 @@
+import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class _CadastroPageState extends State<CadastroPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cadastro"),
+        title: DetranTitle(),
         centerTitle: true,
         leading: BackButton(color: Colors.white),
         backgroundColor: const Color.fromARGB(255, 0, 128, 198),
@@ -144,13 +145,32 @@ class _CadastroPageState extends State<CadastroPage> {
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: _dataNascimentoController,
+                  readOnly: true, // Torna o campo somente leitura
                   decoration: const InputDecoration(
                     labelText: "Data de Nascimento",
-                    hintText: "Digite sua data de nascimento",
+                    hintText: "Selecione sua data de nascimento",
+                    suffixIcon:
+                        Icon(Icons.calendar_today), // Ícone do calendário
                   ),
+                  onTap: () async {
+                    DateTime? selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1900), // Limite inferior (ex.: 1900)
+                      lastDate: DateTime.now(), // Data máxima (ex.: hoje)
+                      locale: const Locale('pt', 'BR'), // Idioma pt-BR
+                    );
+
+                    if (selectedDate != null) {
+                      setState(() {
+                        _dataNascimentoController.text =
+                            "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+                      });
+                    }
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor, insira sua data de nascimento';
+                      return 'Por favor, selecione sua data de nascimento';
                     }
                     return null;
                   },
