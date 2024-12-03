@@ -91,70 +91,40 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     Image.asset('images/detranlogo.jpg'),
                     const SizedBox(height: 20),
-                    // Seus widgets de input e botões
+                    // Substituindo os TextFormFields
                     Column(
                       children: [
                         Row(
-                          children: const [
-                            Text(
-                              "Email",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 0, 128, 198),
-                              ),
-                            ),
-                          ],
+                          children: const [],
                         ),
-                        TextFormField(
+                        const SizedBox(height: 8),
+                        _buildTextField(
                           controller: email,
-                          decoration: const InputDecoration(
-                            hintText: "Inserir email",
-                            hintStyle:
-                                TextStyle(fontSize: 12, color: Colors.grey),
-                          ),
-                          validator: (email) {
-                            if (email == null || email.isEmpty) {
-                              return 'Insira seu email';
-                            }
-                            return null;
-                          },
+                          label: "Email",
+                          hint: "Inserir email",
                         ),
                         const SizedBox(height: 20),
                         Row(
-                          children: const [
-                            Text(
-                              "Senha",
-                              style: TextStyle(
-                                color: Color.fromARGB(255, 0, 128, 198),
-                              ),
-                            ),
-                          ],
+                          children: const [],
                         ),
-                        TextFormField(
+                        const SizedBox(height: 8),
+                        _buildTextField(
                           controller: _senha,
+                          label: "Senha",
+                          hint: "Inserir senha",
                           obscureText: !_exibirSenha,
-                          decoration: InputDecoration(
-                            hintText: "Inserir senha",
-                            hintStyle: const TextStyle(
-                                fontSize: 12, color: Colors.grey),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _exibirSenha
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility_outlined,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _exibirSenha = !_exibirSenha;
-                                });
-                              },
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _exibirSenha
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
                             ),
+                            onPressed: () {
+                              setState(() {
+                                _exibirSenha = !_exibirSenha;
+                              });
+                            },
                           ),
-                          validator: (senha) {
-                            if (senha == null || senha.isEmpty) {
-                              return 'Informe a sua senha';
-                            }
-                            return null;
-                          },
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
@@ -217,4 +187,48 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+Widget _buildTextField({
+  required TextEditingController controller,
+  required String label,
+  required String hint,
+  bool obscureText = false,
+  Widget? suffixIcon,
+}) {
+  return TextFormField(
+    controller: controller,
+    obscureText: obscureText,
+    style: const TextStyle(color: Color(0xFF0E64B7)),
+    decoration: InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: Color(0xFF0E64B7)),
+      hintText: hint,
+      hintStyle: const TextStyle(color: Color(0xFF6EA8FE)),
+      suffixIcon: suffixIcon,
+      filled: false,
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(0xFF6EA8FE), width: 1.5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(0xFF0E64B7), width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.red, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'Por favor, insira ${label.toLowerCase()}';
+      }
+      return null;
+    },
+  );
 }

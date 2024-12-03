@@ -32,133 +32,90 @@ class _CadastroPageState extends State<CadastroPage> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(20.0),
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const SizedBox(height: 20),
-                TextFormField(
+                const Text(
+                  "Preencha os dados para cadastro",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 0, 128, 198),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                _buildTextField(
                   controller: _nomeController,
-                  decoration: const InputDecoration(
-                    labelText: "Nome",
-                    hintText: "Digite seu nome completo",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira seu nome';
-                    }
-                    return null;
-                  },
+                  label: "Nome",
+                  hint: "Digite seu nome completo",
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
+                const SizedBox(height: 15),
+                _buildTextField(
                   controller: _cpfController,
-                  decoration: const InputDecoration(
-                    labelText: "CPF",
-                    hintText: "Digite seu CPF",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira seu CPF';
-                    }
-                    return null;
-                  },
+                  label: "CPF",
+                  hint: "Digite seu CPF",
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
+                const SizedBox(height: 15),
+                _buildTextField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: "E-mail",
-                    hintText: "Digite seu e-mail",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira seu e-mail';
-                    }
-                    return null;
-                  },
+                  label: "E-mail",
+                  hint: "Digite seu e-mail",
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
+                const SizedBox(height: 15),
+                _buildTextField(
                   controller: _senhaController,
+                  label: "Senha",
+                  hint: "Digite sua senha",
                   obscureText: !_exibirSenha,
-                  decoration: InputDecoration(
-                    labelText: "Senha",
-                    hintText: "Digite sua senha",
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _exibirSenha
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _exibirSenha = !_exibirSenha;
-                        });
-                      },
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _exibirSenha
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                     ),
+                    onPressed: () {
+                      setState(() {
+                        _exibirSenha = !_exibirSenha;
+                      });
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira sua senha';
-                    }
-                    if (value.length < 6) {
-                      return 'A senha deve ter pelo menos 6 caracteres';
-                    }
-                    return null;
-                  },
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
+                const SizedBox(height: 15),
+                _buildTextField(
                   controller: _confirmarSenhaController,
+                  label: "Confirmar Senha",
+                  hint: "Confirme sua senha",
                   obscureText: !_exibirSenha,
-                  decoration: InputDecoration(
-                    labelText: "Confirmar Senha",
-                    hintText: "Confirme sua senha",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, confirme sua senha';
-                    }
-                    if (value != _senhaController.text) {
-                      return 'As senhas não coincidem';
-                    }
-                    return null;
-                  },
                 ),
-                const SizedBox(height: 20),
-                TextFormField(
+                const SizedBox(height: 15),
+                _buildTextField(
                   controller: _telefoneController,
-                  decoration: const InputDecoration(
-                    labelText: "Telefone",
-                    hintText: "Digite seu telefone",
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira seu telefone';
-                    }
-                    return null;
-                  },
+                  label: "Telefone",
+                  hint: "Digite seu telefone",
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 15),
                 TextFormField(
                   controller: _dataNascimentoController,
-                  readOnly: true, // Torna o campo somente leitura
-                  decoration: const InputDecoration(
+                  readOnly: true,
+                  decoration: InputDecoration(
                     labelText: "Data de Nascimento",
                     hintText: "Selecione sua data de nascimento",
-                    suffixIcon:
-                        Icon(Icons.calendar_today), // Ícone do calendário
+                    suffixIcon: const Icon(Icons.calendar_today),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   onTap: () async {
                     DateTime? selectedDate = await showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
-                      firstDate: DateTime(1900), // Limite inferior (ex.: 1900)
-                      lastDate: DateTime.now(), // Data máxima (ex.: hoje)
-                      locale: const Locale('pt', 'BR'), // Idioma pt-BR
+                      firstDate: DateTime(1900),
+                      lastDate: DateTime.now(),
+                      locale: const Locale('pt', 'BR'),
                     );
 
                     if (selectedDate != null) {
@@ -175,6 +132,7 @@ class _CadastroPageState extends State<CadastroPage> {
                     return null;
                   },
                 ),
+                const SizedBox(height: 20),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
@@ -242,4 +200,48 @@ class _CadastroPageState extends State<CadastroPage> {
       ),
     );
   }
+}
+
+Widget _buildTextField({
+  required TextEditingController controller,
+  required String label,
+  required String hint,
+  bool obscureText = false,
+  Widget? suffixIcon,
+}) {
+  return TextFormField(
+    controller: controller,
+    obscureText: obscureText,
+    style: const TextStyle(color: Color(0xFF0E64B7)),
+    decoration: InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: Color(0xFF0E64B7)),
+      hintText: hint,
+      hintStyle: const TextStyle(color: Color(0xFF6EA8FE)),
+      suffixIcon: suffixIcon,
+      filled: false,
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(0xFF6EA8FE), width: 1.5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(0xFF0E64B7), width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.red, width: 2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
+    validator: (value) {
+      if (value == null || value.isEmpty) {
+        return 'Por favor, insira ${label.toLowerCase()}';
+      }
+      return null;
+    },
+  );
 }
