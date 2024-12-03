@@ -39,12 +39,14 @@ class _CadastroPageState extends State<CadastroPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const SizedBox(height: 20),
-                const Text(
-                  "Preencha os dados para cadastro",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromARGB(255, 0, 128, 198),
+                Center(
+                  child: const Text(
+                    "Preencha os dados para cadastro",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 0, 128, 198),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -101,11 +103,30 @@ class _CadastroPageState extends State<CadastroPage> {
                 TextFormField(
                   controller: _dataNascimentoController,
                   readOnly: true,
+                  style: const TextStyle(color: Color(0xFF0E64B7)),
                   decoration: InputDecoration(
                     labelText: "Data de Nascimento",
-                    hintText: "Selecione sua data de nascimento",
-                    suffixIcon: const Icon(Icons.calendar_today),
-                    border: OutlineInputBorder(
+                    labelStyle: const TextStyle(color: Color(0xFF0E64B7)),
+                    hintStyle: const TextStyle(color: Color(0xFF6EA8FE)),
+                    suffixIcon: Icon(Icons.calendar_month),
+                    filled: false,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(
+                          color: Color(0xFF6EA8FE), width: 1.5),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Color(0xFF0E64B7), width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(color: Colors.red, width: 1.5),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.red, width: 2),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
@@ -134,63 +155,66 @@ class _CadastroPageState extends State<CadastroPage> {
                 ),
                 const SizedBox(height: 20),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      try {
-                        // Registra o usuário no Firebase Authentication
-                        UserCredential userCredential = await FirebaseAuth
-                            .instance
-                            .createUserWithEmailAndPassword(
-                          email: _emailController.text.trim(),
-                          password: _senhaController.text.trim(),
-                        );
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        try {
+                          // Registra o usuário no Firebase Authentication
+                          UserCredential userCredential = await FirebaseAuth
+                              .instance
+                              .createUserWithEmailAndPassword(
+                            email: _emailController.text.trim(),
+                            password: _senhaController.text.trim(),
+                          );
 
-                        // Obtém o ID do usuário registrado
-                        String userId = userCredential.user!.uid;
+                          // Obtém o ID do usuário registrado
+                          String userId = userCredential.user!.uid;
 
-                        // Salva dados adicionais no Realtime Database
-                        DatabaseReference usersRef =
-                            FirebaseDatabase.instance.ref('users');
-                        await usersRef.child(userId).set({
-                          'nome': _nomeController.text.trim(),
-                          'cpf': _cpfController.text.trim(),
-                          'email': _emailController.text.trim(),
-                          'telefone': _telefoneController.text.trim(),
-                          'dataNascimento':
-                              _dataNascimentoController.text.trim(),
-                        });
+                          // Salva dados adicionais no Realtime Database
+                          DatabaseReference usersRef =
+                              FirebaseDatabase.instance.ref('users');
+                          await usersRef.child(userId).set({
+                            'nome': _nomeController.text.trim(),
+                            'cpf': _cpfController.text.trim(),
+                            'email': _emailController.text.trim(),
+                            'telefone': _telefoneController.text.trim(),
+                            'dataNascimento':
+                                _dataNascimentoController.text.trim(),
+                          });
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text("Usuário registrado com sucesso!")),
-                        );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content:
+                                    Text("Usuário registrado com sucesso!")),
+                          );
 
-                        _formKey.currentState!.reset();
-                        _nomeController.clear();
-                        _cpfController.clear();
-                        _emailController.clear();
-                        _senhaController.clear();
-                        _confirmarSenhaController.clear();
-                        _telefoneController.clear();
-                        _dataNascimentoController.clear();
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Erro ao registrar: $e")),
-                        );
+                          _formKey.currentState!.reset();
+                          _nomeController.clear();
+                          _cpfController.clear();
+                          _emailController.clear();
+                          _senhaController.clear();
+                          _confirmarSenhaController.clear();
+                          _telefoneController.clear();
+                          _dataNascimentoController.clear();
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Erro ao registrar: $e")),
+                          );
+                        }
                       }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 0, 128, 198),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 30,
-                      vertical: 10,
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 0, 128, 198),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 10,
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    "Cadastrar",
-                    style: TextStyle(color: Colors.white),
+                    child: const Text(
+                      "Cadastrar",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
