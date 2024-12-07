@@ -176,7 +176,6 @@ class _CadastroPageState extends State<CadastroPage> {
                         );
 
                         try {
-                          // Registra o usuário no Firebase Authentication
                           UserCredential userCredential = await FirebaseAuth
                               .instance
                               .createUserWithEmailAndPassword(
@@ -184,10 +183,8 @@ class _CadastroPageState extends State<CadastroPage> {
                             password: _senhaController.text.trim(),
                           );
 
-                          // Obtém o ID do usuário registrado
                           String userId = userCredential.user!.uid;
 
-                          // Salva dados adicionais no Realtime Database
                           DatabaseReference usersRef =
                               FirebaseDatabase.instance.ref('users');
                           await usersRef.child(userId).set({
@@ -219,10 +216,9 @@ class _CadastroPageState extends State<CadastroPage> {
                           );
                         } finally {
                           setState(() {
-                            _isLoading = false; // Desativa o carregamento
+                            _isLoading = false;
                           });
 
-                          // Fecha o diálogo de carregamento
                           Navigator.pop(context);
                         }
                       }

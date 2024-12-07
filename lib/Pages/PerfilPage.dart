@@ -164,43 +164,62 @@ class _PerfilPageState extends State<PerfilPage> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 0, 128, 198),
-                ),
-                onPressed: () async {
-                  if (_isEditing) {
-                    App_User? user =
-                        await userProvider.getUserDataFromDatabase();
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(7),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 0, 128, 198),
+                      ),
+                      onPressed: () async {
+                        if (_isEditing) {
+                          App_User? user =
+                              await userProvider.getUserDataFromDatabase();
 
-                    if (user != null) {
-                      final updatedUser = App_User(
-                        id: user.id,
-                        nome: _nomeController.text,
-                        phone_number: _phoneController.text,
-                        cpf: _cpfController.text,
-                        datanascimento: _selectedDate!,
-                        email: user.email,
-                      );
+                          if (user != null) {
+                            final updatedUser = App_User(
+                              id: user.id,
+                              nome: _nomeController.text,
+                              phone_number: _phoneController.text,
+                              cpf: _cpfController.text,
+                              datanascimento: _selectedDate!,
+                              email: user.email,
+                            );
 
-                      await userProvider.updateUserInFirebase(
-                          updatedUser, context);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Erro: Usuário não encontrado.')),
-                      );
-                    }
-                  }
+                            await userProvider.updateUserInFirebase(
+                                updatedUser, context);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content:
+                                      Text('Erro: Usuário não encontrado.')),
+                            );
+                          }
+                        }
 
-                  setState(() {
-                    _isEditing = !_isEditing;
-                  });
-                },
-                child: Text(
-                  _isEditing ? 'Salvar' : 'Editar',
-                  style: TextStyle(color: Colors.white),
-                ),
+                        setState(() {
+                          _isEditing = !_isEditing;
+                        });
+                      },
+                      child: Text(
+                        _isEditing ? 'Salvar' : 'Editar',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    child: Text(
+                      'Deletar',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 168, 8, 8),
+                    ),
+                    onPressed: () {},
+                  )
+                ],
               ),
             ],
           ),
