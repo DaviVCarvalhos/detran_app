@@ -21,7 +21,7 @@ class _VeiculoPageState extends State<VeiculoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Veiculo Page'),
+        title: const Text('Veiculos'),
       ),
       endDrawer: _buildDrawer(context),
       body: _pages[_selectedIndex],

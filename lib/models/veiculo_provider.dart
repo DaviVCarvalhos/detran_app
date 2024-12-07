@@ -7,11 +7,6 @@ class VeiculoProvider with ChangeNotifier {
   final _baseUrl = 'https://detranapp-75e56-default-rtdb.firebaseio.com/';
   Veiculo? veiculoPesquisado;
 
-  List<Veiculo> _veiculos = [];
-  List<Veiculo> get veiculos => _veiculos;
-
-  // Future<List<Veiculo>> getVeiculosFromUser(String userId) {}
-
   Future<void> adicionarVeiculo(Veiculo veiculo) async {
     final response = await http.post(Uri.parse('$_baseUrl/veiculos.json'),
         body: json.encode(veiculo.toJson()));
@@ -48,32 +43,25 @@ class VeiculoProvider with ChangeNotifier {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        // Se não há veículos, retorna lista vazia
         if (response.body == 'null') {
           return [];
         }
-
-        // Converte o JSON de meusVeiculos para identificar os IDs dos veículos
         Map<String, dynamic> meusVeiculosMap = json.decode(response.body);
 
-        // Filtra os IDs dos veículos que o usuário possui (valor = true)
         List<String> veiculosIds = meusVeiculosMap.keys
             .where((key) => meusVeiculosMap[key] == true)
             .toList();
 
-        // Se não há veículos, retorna lista vazia
         if (veiculosIds.isEmpty) {
           return [];
         }
 
-        // Busca os detalhes de cada veículo
         List<Veiculo> veiculos = [];
         for (String veiculoId in veiculosIds) {
           final veiculoUrl = Uri.parse('$_baseUrl/veiculos/$veiculoId.json');
           final veiculoResponse = await http.get(veiculoUrl);
 
           if (veiculoResponse.statusCode == 200) {
-            // Verifica se o corpo não é nulo
             if (veiculoResponse.body != 'null') {
               Map<String, dynamic> veiculoData =
                   json.decode(veiculoResponse.body);
