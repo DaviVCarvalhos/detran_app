@@ -1,5 +1,6 @@
 import 'package:detranapp/models/App_User.dart';
 import 'package:detranapp/models/user_provider.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -217,7 +218,50 @@ class _PerfilPageState extends State<PerfilPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 168, 8, 8),
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        final userProvider =
+                            Provider.of<UserProvider>(context, listen: false);
+
+                        // Obtenha o ID do usuário atual
+                        final user = userProvider.currentUser;
+                        if (user == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Nenhum usuário logado.')),
+                          );
+                          return;
+                        }
+
+                        // Deletar do Firebase Authentication
+                        await userProvider.deleteCurrentUser();
+
+                        App_User? userdelete =
+                            await userProvider.getUserDataFromDatabase();
+
+                        if (userdelete != null) {
+                          final userId = userdelete.id;
+
+                          // Deletar do Firebase Realtime Database
+                          final databaseReference =
+                              FirebaseDatabase.instance.ref('users/$userId');
+                          await databaseReference.remove();
+                        }
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text('Usuário deletado com sucesso!')),
+                        );
+
+                        // Navegar para a tela de login
+                        Navigator.of(context).pushReplacementNamed('/login');
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text('Erro ao deletar usuário: $e')),
+                        );
+                      }
+                    },
                   )
                 ],
               ),

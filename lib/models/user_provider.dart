@@ -64,4 +64,15 @@ class UserProvider with ChangeNotifier {
       );
     }
   }
+
+  Future<void> deleteCurrentUser() async {
+    try {
+      _currentUser = FirebaseAuth.instance.currentUser;
+      if (_currentUser != null) {
+        await _currentUser!.delete();
+      }
+    } catch (e) {
+      throw Exception('Erro ao deletar usuário: $e');
+    }
+  }
 }
