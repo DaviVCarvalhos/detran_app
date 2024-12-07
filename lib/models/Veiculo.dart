@@ -1,6 +1,6 @@
 class Veiculo {
   Veiculo({
-    required this.id,
+    this.id,
     required this.placa,
     required this.renavam,
     required this.modelo,
@@ -9,7 +9,7 @@ class Veiculo {
     this.proprietarioAnterior,
   });
 
-  String id;
+  String? id;
   String placa;
   String renavam;
   String modelo;

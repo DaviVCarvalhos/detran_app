@@ -1,5 +1,4 @@
 import 'package:detranapp/Pages/Veiculo/VeiculoPage.dart';
-import 'package:detranapp/models/Veiculo.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoWidget extends StatelessWidget {

@@ -1,164 +1,74 @@
 import 'package:detranapp/Pages/Veiculo/ConsultarVeiculoPage.dart';
-import 'package:detranapp/Pages/LoginPage.dart';
 import 'package:detranapp/Pages/Veiculo/MeusVeiculosPage.dart';
-import 'package:detranapp/models/user_provider.dart';
-import 'package:detranapp/models/veiculo_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class VeiculoPage extends StatefulWidget {
-  const VeiculoPage({super.key});
+  const VeiculoPage({Key? key}) : super(key: key);
 
   @override
   State<VeiculoPage> createState() => _VeiculoPageState();
 }
 
 class _VeiculoPageState extends State<VeiculoPage> {
-  Widget? _conteudoAtual;
-  String? _tituloAtual;
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    const MeusVeiculosPage(),
+    const ConsultarVeiculoPage(),
+  ];
 
   @override
-  void initState() {
-    super.initState();
-    _atualizarConteudoInicial();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Veiculos'),
+      ),
+      endDrawer: _buildDrawer(context),
+      body: _pages[_selectedIndex],
+    );
   }
 
-  void _atualizarConteudoInicial() {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final veiculoProvider =
-        Provider.of<VeiculoProvider>(context, listen: false);
-    final user = userProvider.app_user;
-
-    if (user != null && veiculoProvider.veiculos.isNotEmpty) {
-      _conteudoAtual = MeusVeiculosPage(veiculos: veiculoProvider.veiculos);
-      _tituloAtual = 'Meus Veículos';
-    } else {
-      _conteudoAtual = _buildEmptyState();
-      _tituloAtual = 'Meus Veículos';
-    }
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.directions_car, size: 80, color: Colors.grey),
-          const SizedBox(height: 20),
-          Text(
-            'Nenhum veículo cadastrado.',
-            style: TextStyle(fontSize: 18, color: Colors.grey[600]),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-            onPressed: () {
-              final userProvider =
-                  Provider.of<UserProvider>(context, listen: false);
-              if (userProvider.app_user != null) {
-                setState(() {
-                  _conteudoAtual = ConsultarVeiculoPage();
-                  _tituloAtual = 'Consulta de Veículo';
-                });
-              } else {
-                setState(() {
-                  _conteudoAtual = const LoginPage();
-                  _tituloAtual = 'Login';
-                });
-              }
-            },
-            child: const Text(
-              'Consultar Veículo',
-              style: TextStyle(color: Colors.white),
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      backgroundColor: const Color.fromARGB(255, 150, 199, 239),
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: Color(0xFF2196F3),
             ),
+            child: Center(
+              child: Text(
+                'Serviços e Taxas',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            title: const Text('Meus Veículos'),
+            onTap: () {
+              _navigateTo(context, 0);
+            },
+          ),
+          ListTile(
+            title: const Text('Consultar Veículo'),
+            onTap: () {
+              _navigateTo(context, 1);
+            },
           ),
         ],
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final userProvider = Provider.of<UserProvider>(context);
-    final veiculoProvider = Provider.of<VeiculoProvider>(context);
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF2196F3),
-        title: Text(
-          _tituloAtual ?? 'Veículos',
-          style: const TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      endDrawer: Drawer(
-        backgroundColor: const Color.fromARGB(255, 150, 199, 239),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xFF2196F3),
-              ),
-              child: Center(
-                child: Text(
-                  'Serviços e Taxas',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(
-                  userProvider.app_user != null ? Icons.lock_open : Icons.lock),
-              title: const Text("Meus Veículos"),
-              onTap: () {
-                if (userProvider.app_user != null &&
-                    veiculoProvider.veiculos.isNotEmpty) {
-                  setState(() {
-                    _conteudoAtual =
-                        MeusVeiculosPage(veiculos: veiculoProvider.veiculos);
-                    _tituloAtual = 'Meus Veículos';
-                  });
-                } else {
-                  setState(() {
-                    _conteudoAtual = _buildEmptyState();
-                    _tituloAtual = 'Meus Veículos';
-                  });
-                }
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                  userProvider.app_user != null ? Icons.lock_open : Icons.lock),
-              title: const Text('Consulta de Veículo'),
-              onTap: () {
-                if (userProvider.app_user != null) {
-                  setState(() {
-                    _conteudoAtual = ConsultarVeiculoPage();
-                    _tituloAtual = 'Consulta de Veículo';
-                  });
-                } else {
-                  setState(() {
-                    _conteudoAtual = const LoginPage();
-                    _tituloAtual = 'Login';
-                  });
-                }
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
-      body: _conteudoAtual ?? _buildEmptyState(),
-    );
+  void _navigateTo(BuildContext context, int pageIndex) {
+    setState(() {
+      _selectedIndex = pageIndex;
+    });
+    Navigator.pop(context);
   }
 }
