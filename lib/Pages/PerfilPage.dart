@@ -255,7 +255,6 @@ class _PerfilPageState extends State<PerfilPage> {
                         );
 
                         // Navegar para a tela de login
-                        Navigator.of(context).pushReplacementNamed('/login');
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
