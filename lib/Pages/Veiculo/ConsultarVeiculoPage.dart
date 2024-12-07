@@ -1,5 +1,6 @@
 import 'package:detranapp/models/App_User.dart';
 import 'package:detranapp/models/Veiculo.dart';
+import 'package:detranapp/models/user_provider.dart';
 import 'package:detranapp/models/veiculo_provider.dart';
 import 'package:detranapp/widgets/VeiculoDetails.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class ConsultarVeiculoPage extends StatefulWidget {
 }
 
 class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
-  late App_User user;
+  App_User? user;
   Veiculo? veiculoPesquisado;
 
   final TextEditingController placaController = TextEditingController();
@@ -28,8 +29,17 @@ class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
   }
 
   Future<void> _pesquisarVeiculo(VeiculoProvider veiculoProvider) async {
+    // Veiculo veiculo = new Veiculo(
+    //     placa: "OJH7612",
+    //     renavam: "1234567890",
+    //     modelo: "BMW 320I",
+    //     anoFabricacao: "2016",
+    //     nomeProprietario: "Ian Porpino de Macedo");
+    // veiculoProvider.adicionarVeiculo(veiculo);
+
     setState(() {
       isLoading = true;
+      veiculoPesquisado = null;
     });
 
     try {
@@ -59,6 +69,7 @@ class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
   @override
   Widget build(BuildContext context) {
     final veiculoProvider = Provider.of<VeiculoProvider>(context);
+    final user = Provider.of<UserProvider>(context).app_user;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -124,7 +135,7 @@ class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
         ),
       ),
       floatingActionButton: (veiculoPesquisado != null &&
-              veiculoPesquisado!.nomeProprietario == user.nome)
+              veiculoPesquisado!.nomeProprietario == user!.nome)
           ? FloatingActionButton(
               onPressed: () {
                 veiculoProvider.adicionarVeiculoAoUsuario(

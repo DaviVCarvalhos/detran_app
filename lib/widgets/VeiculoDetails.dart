@@ -2,9 +2,9 @@ import 'package:detranapp/models/Veiculo.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoDetails extends StatelessWidget {
-  late final Veiculo veiculo;
+  final Veiculo? veiculo;
 
-  VeiculoDetails(Veiculo veiculo);
+  const VeiculoDetails(this.veiculo, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +28,11 @@ class VeiculoDetails extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              _buildDetailRow('Placa:', veiculo.placa),
-              _buildDetailRow('Renavam:', veiculo.renavam),
-              _buildDetailRow('Modelo:', veiculo.modelo),
-              _buildDetailRow('Ano:', veiculo.anoFabricacao),
-              _buildDetailRow('Proprietário:', veiculo.nomeProprietario),
+              _buildDetailRow('Placa:', veiculo!.placa),
+              _buildDetailRow('Renavam:', veiculo!.renavam),
+              _buildDetailRow('Modelo:', veiculo!.modelo),
+              _buildDetailRow('Ano:', veiculo!.anoFabricacao),
+              _buildDetailRow('Proprietário:', veiculo!.nomeProprietario),
             ],
           ),
         ),
