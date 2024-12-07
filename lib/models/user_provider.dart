@@ -48,4 +48,20 @@ class UserProvider with ChangeNotifier {
       return null;
     }
   }
+
+  Future<void> updateUserInFirebase(
+      App_User updatedUser, BuildContext context) async {
+    final databaseReference =
+        FirebaseDatabase.instance.ref('users/${updatedUser.id}');
+    try {
+      await databaseReference.update(updatedUser.toMap());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Perfil atualizado com sucesso!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao atualizar o perfil: $e')),
+      );
+    }
+  }
 }

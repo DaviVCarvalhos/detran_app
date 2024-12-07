@@ -1,5 +1,5 @@
 import 'package:detranapp/Pages/HomePage.dart';
-import 'package:detranapp/models/Leilao.dart';
+
 import 'package:detranapp/models/user_provider.dart';
 import 'package:detranapp/models/veiculo_provider.dart';
 import 'package:firebase_core/firebase_core.dart';

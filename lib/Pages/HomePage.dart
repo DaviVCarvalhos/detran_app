@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            PerfilPage(user: user!), // Passa o user, que pode ser o default
+            PerfilPage(), // Passa o user, que pode ser o default
           ],
         ),
         bottomNavigationBar: Container(
