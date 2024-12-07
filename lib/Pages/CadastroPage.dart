@@ -142,8 +142,7 @@ class _CadastroPageState extends State<CadastroPage> {
 
                     if (selectedDate != null) {
                       setState(() {
-                        _dataNascimentoController.text =
-                            "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}";
+                        _dataNascimentoController.text = "${selectedDate}";
                       });
                     }
                   },
