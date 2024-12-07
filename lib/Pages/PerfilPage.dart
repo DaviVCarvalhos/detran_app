@@ -11,10 +11,11 @@ class PerfilPage extends StatefulWidget {
 }
 
 class _PerfilPageState extends State<PerfilPage> {
-  TextEditingController _nomeController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _cpfController = TextEditingController();
-  TextEditingController _datanascimentoController = TextEditingController();
+  late TextEditingController _nomeController = TextEditingController();
+  late TextEditingController _phoneController = TextEditingController();
+  late TextEditingController _cpfController = TextEditingController();
+  late TextEditingController _datanascimentoController =
+      TextEditingController();
 
   bool _isEditing = false;
   bool _userIsNull = false;
