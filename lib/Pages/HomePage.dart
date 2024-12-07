@@ -21,31 +21,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   App_User? user;
-  bool isLoading = true;
-
-  final App_User defaultUser = App_User(
-    id: '0',
-    cpf: '00000000000',
-    datanascimento: DateTime(2000, 1, 1),
-    nome: 'Visitante',
-    email: 'visitante@exemplo.com',
-    phone_number: '0000000000',
-  );
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchUser();
-  }
-
-  Future<void> _fetchUser() async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final fetchedUser = await userProvider.getUserDataFromDatabase();
-
-    setState(() {
-      user = fetchedUser ?? defaultUser;
-      isLoading = false;
-    });
+    ;
   }
 
   @override
