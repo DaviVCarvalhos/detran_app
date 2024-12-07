@@ -246,6 +246,7 @@ class _PerfilPageState extends State<PerfilPage> {
                           final databaseReference =
                               FirebaseDatabase.instance.ref('users/$userId');
                           await databaseReference.remove();
+                          userProvider.logout();
                         }
 
                         ScaffoldMessenger.of(context).showSnackBar(
