@@ -1,5 +1,6 @@
 import 'package:detranapp/Pages/Veiculo/ConsultarVeiculoPage.dart';
 import 'package:detranapp/Pages/Veiculo/MeusVeiculosPage.dart';
+import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:flutter/material.dart';
 
 class VeiculoPage extends StatefulWidget {
@@ -21,7 +22,11 @@ class _VeiculoPageState extends State<VeiculoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Veiculos'),
+        title: DetranTitle(),
+        backgroundColor: const Color(0xFF2196F3),
+        iconTheme: IconThemeData(
+          color: Colors.white, // Cor do ícone do Drawer
+        ),
       ),
       endDrawer: _buildDrawer(context),
       body: _pages[_selectedIndex],
@@ -49,13 +54,23 @@ class _VeiculoPageState extends State<VeiculoPage> {
             ),
           ),
           ListTile(
-            title: const Text('Meus Veículos'),
+            title: const Text(
+              'Meus Veículos',
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
             onTap: () {
               _navigateTo(context, 0);
             },
           ),
+          Divider(
+            color: const Color.fromARGB(255, 191, 197, 197),
+            thickness: 3,
+          ),
           ListTile(
-            title: const Text('Consultar Veículo'),
+            title: const Text(
+              'Consultar Veículo',
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
             onTap: () {
               _navigateTo(context, 1);
             },

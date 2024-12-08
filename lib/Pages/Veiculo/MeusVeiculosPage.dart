@@ -18,6 +18,15 @@ class MeusVeiculosPage extends StatelessWidget {
     final user = userProvider.app_user;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Meus Veiculos',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF2196F3),
+        automaticallyImplyLeading: false,
+      ),
       body: user == null
           ? _buildEmptyState(context, user)
           : FutureBuilder<List<Veiculo>>(

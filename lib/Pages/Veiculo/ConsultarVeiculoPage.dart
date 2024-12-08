@@ -72,6 +72,15 @@ class _ConsultarVeiculoPageState extends State<ConsultarVeiculoPage> {
     final user = Provider.of<UserProvider>(context).app_user;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Consultar Veiculos',
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color(0xFF2196F3),
+        automaticallyImplyLeading: false,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
