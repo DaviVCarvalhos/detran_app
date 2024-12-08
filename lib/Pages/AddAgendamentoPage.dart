@@ -25,7 +25,7 @@ class _AdicionarAgendamentoPageState extends State<AdicionarAgendamentoPage> {
   Future<void> _adicionarAgendamento() async {
     if (_formKey.currentState?.validate() ?? false) {
       final agendamento = Agendamento(
-        id: '', 
+        id: '',
         categoria: _categoria,
         data: _data,
         hora: _hora,
@@ -37,14 +37,12 @@ class _AdicionarAgendamentoPageState extends State<AdicionarAgendamentoPage> {
       try {
         await Provider.of<AgendamentoProvider>(context, listen: false)
             .adicionarAgendamento(agendamento);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                'Agendamento adicionado com sucesso!'))); 
-        Navigator.pop(context); 
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Agendamento adicionado com sucesso!')));
+        Navigator.pop(context);
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content:
-                Text('Erro ao adicionar agendamento: $e'))); 
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Erro ao adicionar agendamento: $e')));
       }
     }
   }
@@ -59,61 +57,83 @@ class _AdicionarAgendamentoPageState extends State<AdicionarAgendamentoPage> {
           color: Colors.white,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Categoria'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira a categoria do agendamento';
-                  }
-                  return null;
-                },
-                onChanged: (value) => _categoria = value,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Data (YYYY-MM-DD)'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira a data do agendamento';
-                  }
-                  return null;
-                },
-                onChanged: (value) => _data = value,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Hora'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira a hora';
-                  }
-                  return null;
-                },
-                onChanged: (value) => _hora = value,
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Local'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Por favor, insira o local';
-                  }
-                  return null;
-                },
-                onChanged: (value) => _local = value,
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _adicionarAgendamento,
-                child: Text('Adicionar Agendamento'),
-              ),
-            ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildTextFormField(
+                  label: 'Categoria',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira a categoria do agendamento';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => _categoria = value,
+                ),
+                _buildTextFormField(
+                  label: 'Data (YYYY-MM-DD)',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira a data do agendamento';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => _data = value,
+                ),
+                _buildTextFormField(
+                  label: 'Hora',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira a hora';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => _hora = value,
+                ),
+                _buildTextFormField(
+                  label: 'Local',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, insira o local';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => _local = value,
+                ),
+                SizedBox(height: 20),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _adicionarAgendamento,
+                    child: Text('Adicionar Agendamento'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField({
+    required String label,
+    required String? Function(String?) validator,
+    required ValueChanged<String> onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: label,
+          border: OutlineInputBorder(),
+        ),
+        validator: validator,
+        onChanged: onChanged,
       ),
     );
   }

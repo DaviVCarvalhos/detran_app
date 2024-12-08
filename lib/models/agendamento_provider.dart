@@ -18,7 +18,10 @@ class AgendamentoProvider with ChangeNotifier {
         final Map<String, dynamic> data = json.decode(response.body);
         _agendamentos = data.entries.where((entry) {
           final agendamentoData = entry.value;
-          return agendamentoData['userId'] == userId;
+
+          final userIdValue = agendamentoData['userId'];
+
+          return userIdValue != null && userIdValue == userId;
         }).map((entry) {
           final id = entry.key;
           final agendamentoData = entry.value;
@@ -26,7 +29,7 @@ class AgendamentoProvider with ChangeNotifier {
         }).toList();
         notifyListeners();
       } else {
-        throw Exception('Failed to load agendamentos');
+        throw Exception('Failed to load agendamentos: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Erro ao carregar agendamentos: $e');
@@ -34,7 +37,7 @@ class AgendamentoProvider with ChangeNotifier {
   }
 
   Future<void> adicionarAgendamento(Agendamento agendamento) async {
-    final url = Uri.parse('$_baseUrl/agendamento.json');
+    final url = Uri.parse('$_baseUrl/agendamentos.json');
 
     try {
       final response = await http.post(
@@ -60,8 +63,8 @@ class AgendamentoProvider with ChangeNotifier {
           'local': agendamento.local,
         });
 
-        _agendamentos.add(newAgendamento); 
-        notifyListeners(); 
+        _agendamentos.add(newAgendamento);
+        notifyListeners();
       } else {
         throw Exception('Falha ao adicionar o agendamento');
       }
@@ -78,7 +81,7 @@ class AgendamentoProvider with ChangeNotifier {
 
       if (response.statusCode == 200) {
         _agendamentos.removeWhere((agendamento) => agendamento.id == id);
-        notifyListeners(); 
+        notifyListeners();
       } else {
         throw Exception('Falha ao excluir o agendamento');
       }
@@ -88,7 +91,7 @@ class AgendamentoProvider with ChangeNotifier {
   }
 
   Future<void> editarAgendamento(String id, Agendamento agendamento) async {
-    final url = Uri.parse('$_baseUrl/agendamento/$id.json');
+    final url = Uri.parse('$_baseUrl/agendamentos/$id.json');
 
     try {
       final response = await http.patch(
@@ -104,7 +107,7 @@ class AgendamentoProvider with ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        notifyListeners(); 
+        notifyListeners();
       } else {
         throw Exception('Falha ao editar o agendamento');
       }
