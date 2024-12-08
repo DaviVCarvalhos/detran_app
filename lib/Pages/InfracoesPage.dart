@@ -1,96 +1,92 @@
-import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:detranapp/models/infracao_provider.dart';
 
-class InfracoesPage extends StatelessWidget {
-  const InfracoesPage({super.key});
+class InfracoesPage extends StatefulWidget {
+  @override
+  _InfracoesPageState createState() => _InfracoesPageState();
+}
+
+class _InfracoesPageState extends State<InfracoesPage> {
+  // Controladores para os campos de texto
+  final TextEditingController _numeroInfracaoController = TextEditingController();
+  final TextEditingController _cpfController = TextEditingController();
+  final TextEditingController _renavamController = TextEditingController();
+  final TextEditingController _placaController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final infracaoProvider = Provider.of<InfracaoProvider>(context);
+
     return Scaffold(
-      appBar:  AppBar(
-        title: DetranTitle(),
-        
-        backgroundColor:   const Color.fromARGB(255, 247, 19, 3),
-        leading: BackButton(color: Colors.white,),
-        centerTitle: true,
+      appBar: AppBar(
+        title: Text('Consultar Infrações'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12.0),
-                color: const Color(0xFFD1ECF1),
-                child: const Text(
-                  'Digite as informações abaixo sem pontos nem hifens.',
-                  style: TextStyle(color: Color(0xFF0C5460)),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(12.0),
-                color: const Color(0xFFD1ECF1),
-                child: const Text(
-                  'Informe o número do auto de infração igualmente a sua notificação de autuação.',
-                  style: TextStyle(color: Color(0xFF0C5460)),
-                ),
-              ),
-              const SizedBox(height: 16),
-              const TextField(
-                  decoration:
-                      InputDecoration(labelText: 'Placa', hintText: '')),
-              const SizedBox(height: 16),
-              const TextField(
-                  decoration:
-                      InputDecoration(labelText: 'Renavam', hintText: '')),
-              const SizedBox(height: 16),
-              const TextField(
-                decoration: InputDecoration(
-                  labelText: "CPF ou CNPJ do Proprietário",
-                  hintText: "",
-                ),
-              ),
-              const SizedBox(height: 8),
-              const TextField(
-                  decoration: InputDecoration(
-                labelText:
-                    "DIGITAR O Nº DO AUTO DE INFRAÇÃO EXATAMENTE IGUAL AO DA NOTIFICAÇÃO",
-                hintText: "",
-              )),
-              const SizedBox(height: 16),
-              const Text(
-                'Número do Auto de Infração - Exemplos de autos aceitáveis: X 00000000 (digitar o espaço) | XX00000000',
-                style:
-                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  // Função para realizar a consulta
+        child: Column(
+          children: [
+            // Campos de texto para consulta
+            TextField(
+              controller: _numeroInfracaoController,
+              decoration: InputDecoration(labelText: 'Número da Infração'),
+            ),
+            TextField(
+              controller: _cpfController,
+              decoration: InputDecoration(labelText: 'CPF'),
+            ),
+            TextField(
+              controller: _renavamController,
+              decoration: InputDecoration(labelText: 'Renavam'),
+            ),
+            TextField(
+              controller: _placaController,
+              decoration: InputDecoration(labelText: 'Placa'),
+            ),
+            SizedBox(height: 16),
+
+            // Botão de busca
+            ElevatedButton(
+              onPressed: () {
+                infracaoProvider.fetchInfracoesComFiltros(
+                  numeroInfracao: _numeroInfracaoController.text.trim(),
+                  cpf: _cpfController.text.trim(),
+                  renavam: _renavamController.text.trim(),
+                  placa: _placaController.text.trim(),
+                );
+              },
+              child: Text('Buscar'),
+            ),
+
+            SizedBox(height: 16),
+
+            // Exibir lista de infrações filtradas
+            Expanded(
+              child: Consumer<InfracaoProvider>(
+                builder: (context, provider, child) {
+                  if (provider.infracoes.isEmpty) {
+                    return Center(child: Text('Nenhuma infração encontrada.'));
+                  }
+
+                  return ListView.builder(
+                    itemCount: provider.infracoes.length,
+                    itemBuilder: (context, index) {
+                      final infracao = provider.infracoes[index];
+                      return ListTile(
+                        title: Text('Infração: ${infracao.nInfracao}'),
+                        subtitle: Text(
+                          'CPF: ${infracao.cpf}\n'
+                          'Renavam: ${infracao.renavam}\n'
+                          'Placa: ${infracao.placa}\n'
+                          'Quitada: ${infracao.quitada ? 'Sim' : 'Não'}',
+                        ),
+                      );
+                    },
+                  );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF007bff),
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      Icons.search,
-                      color: Colors.white,
-                    ),
-                    SizedBox(width: 8),
-                    Text(
-                      'Consultar',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ],
-                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

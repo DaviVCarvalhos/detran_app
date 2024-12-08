@@ -1,7 +1,6 @@
 import 'package:detranapp/Buttons/LoginButton.dart';
 import 'package:detranapp/Pages/PerfilPage.dart';
 import 'package:detranapp/models/App_User.dart';
-import 'package:detranapp/models/user_provider.dart';
 
 import 'package:detranapp/widgets/AgendamentoWidget.dart';
 import 'package:detranapp/widgets/DetranTitle.dart';
@@ -10,7 +9,6 @@ import 'package:detranapp/widgets/InfracoesWidget.dart';
 import 'package:detranapp/widgets/LeilaoWidget.dart';
 import 'package:detranapp/widgets/VeiculoWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,7 +24,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    ;
   }
 
   @override

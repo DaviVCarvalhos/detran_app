@@ -1,10 +1,8 @@
-import 'package:detranapp/Pages/AgendamentoPage.dart';
 import 'package:flutter/material.dart';
+import 'package:detranapp/Pages/AgendamentoPage.dart';
 
 class AgendamentoWidget extends StatelessWidget {
-  const AgendamentoWidget({
-    super.key,
-  });
+  const AgendamentoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +18,10 @@ class AgendamentoWidget extends StatelessWidget {
           child: InkWell(
             onTap: () {
               Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AgendamentoPage()),
-              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AgendamentoPage(),
+                  ));
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

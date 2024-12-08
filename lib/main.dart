@@ -6,6 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:detranapp/models/infracao_provider.dart';
+import 'package:detranapp/models/agendamento_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +17,9 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
-        ChangeNotifierProvider<VeiculoProvider>(
-          create: (_) => VeiculoProvider(),
-        ),
+        ChangeNotifierProvider<VeiculoProvider>(create: (_) => VeiculoProvider()),
+        ChangeNotifierProvider<InfracaoProvider>(create: (_) => InfracaoProvider()),
+        ChangeNotifierProvider<AgendamentoProvider>(create: (_) => AgendamentoProvider()),
       ],
       child: MyApp(),
     ),
