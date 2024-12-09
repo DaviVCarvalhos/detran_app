@@ -32,6 +32,7 @@ class _InfracoesPageState extends State<InfracoesPage> {
     final user = userProvider.app_user;
 
     return Scaffold(
+      backgroundColor: Color(0xFFF5C6CB),
       appBar: AppBar(
         title: DetranTitle(),
         backgroundColor: Color(0xFFDC3545),
@@ -47,7 +48,13 @@ class _InfracoesPageState extends State<InfracoesPage> {
                 }
 
                 if (snapshot.hasError) {
-                  return Center(child: Text('Erro ao carregar infrações.'));
+                  return Center(
+                    child: Text(
+                      'Erro ao carregar infrações: ${snapshot.error}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                  );
                 }
 
                 final infracoes =
@@ -61,13 +68,47 @@ class _InfracoesPageState extends State<InfracoesPage> {
                   itemCount: infracoes.length,
                   itemBuilder: (ctx, i) {
                     final infracao = infracoes[i];
-                    return ListTile(
-                      title: Text(infracao.descricao),
-                      subtitle: Text(
-                          'Valor: R\$ ${infracao.valor.toStringAsFixed(2)}'),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () => _excluirInfracao(context, infracao.id),
+                    return Card(
+                      margin:
+                          EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ListTile(
+                        contentPadding: EdgeInsets.all(15),
+                        title: Text(
+                          infracao.descricao,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        subtitle: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Valor: R\$ ${(infracao.valor is double ? infracao.valor : infracao.valor.toDouble()).toStringAsFixed(2)}',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            SizedBox(width: 10),
+                            if (!infracao.quitada)
+                              Icon(
+                                Icons.money_off,
+                                color: Colors.red,
+                                size: 20,
+                              ),
+                            if (infracao.quitada)
+                              Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                                size: 20,
+                              ),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () =>
+                              _excluirInfracao(context, infracao.id),
+                        ),
                       ),
                     );
                   },

@@ -34,7 +34,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
     final user = userProvider.app_user;
 
     return Scaffold(
-      backgroundColor: Color(0xFFC3E6CB), 
+      backgroundColor: Color(0xFFC3E6CB),
       appBar: AppBar(
         title: DetranTitle(),
         backgroundColor: Color(0xFF629460),
@@ -78,21 +78,16 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                   itemBuilder: (context, index) {
                     final agendamento = agendamentos[index];
                     return Card(
-                      margin: EdgeInsets.symmetric(
-                          vertical: 5),
+                      margin: EdgeInsets.symmetric(vertical: 5),
                       shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10), 
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       elevation: 3,
                       child: Padding(
-                        padding: const EdgeInsets.all(
-                            8.0), 
+                        padding: const EdgeInsets.all(8.0),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment
-                              .center, 
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,20 +142,35 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                                 ],
                               ),
                             ),
-                            // Ícones de editar e excluir
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
                                   icon: Icon(Icons.edit, color: Colors.blue),
                                   onPressed: () {
-                                    Navigator.of(context).push(
+                                    Navigator.of(context)
+                                        .push(
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             EditarAgendamentoPage(
                                                 agendamento: agendamento),
                                       ),
-                                    );
+                                    )
+                                        .then((updated) {
+                                      if (updated != null && updated) {
+                                        final userProvider =
+                                            Provider.of<UserProvider>(context,
+                                                listen: false);
+                                        final user = userProvider.app_user;
+
+                                        if (user != null) {
+                                          Provider.of<AgendamentoProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .carregarAgendamentos(user.id);
+                                        }
+                                      }
+                                    });
                                   },
                                 ),
                                 IconButton(

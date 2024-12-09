@@ -10,7 +10,6 @@ class InfracaoProvider with ChangeNotifier {
 
   List<Infracao> get infracoes => _infracoes;
 
-  // Função para carregar infrações do usuário logado
   Future<void> carregarInfracoes(String userId) async {
     try {
       final response = await http.get(Uri.parse('$_baseUrl/infracoes.json'));
