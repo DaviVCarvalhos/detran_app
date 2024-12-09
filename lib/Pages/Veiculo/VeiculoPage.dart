@@ -31,11 +31,8 @@ class _VeiculoPageState extends State<VeiculoPage> {
 
     final user = userProvider.app_user;
     if (user != null) {
-      // Chama a busca de veículos de forma assíncrona
       await veiculoProvider.buscarVeiculosDoUsuario(user.id);
     }
-
-    // Atualiza o estado após a busca para mostrar o conteúdo correto
     setState(() {
       _isLoading = false;
       if (veiculoProvider.meusVeiculos.isNotEmpty) {
@@ -159,8 +156,8 @@ class _VeiculoPageState extends State<VeiculoPage> {
         ),
       ),
       body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(), // Mostra o carregamento
+          ? const Center(
+              child: CircularProgressIndicator(),
             )
           : _conteudoAtual ?? _buildEmptyState(),
     );
