@@ -29,7 +29,7 @@ class AgendamentoProvider with ChangeNotifier {
         }).toList();
         notifyListeners();
       } else {
-        throw Exception('Failed to load agendamentos: ${response.statusCode}');
+        throw Exception('Falha ao carregar agendamentos: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Erro ao carregar agendamentos: $e');

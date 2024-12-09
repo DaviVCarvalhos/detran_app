@@ -34,16 +34,14 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
     final user = userProvider.app_user;
 
     return Scaffold(
+      backgroundColor: Color(0xFFC3E6CB), // Cor de fundo da página
       appBar: AppBar(
         title: DetranTitle(),
         backgroundColor: Color(0xFF629460),
         leading: BackButton(color: Colors.white),
         actions: [
           IconButton(
-            icon: const Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
+            icon: const Icon(Icons.add, color: Colors.white),
             onPressed: () {
               if (user == null) {
                 _redirectToLogin(context);
@@ -75,34 +73,110 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                 }
 
                 return ListView.builder(
+                  padding: EdgeInsets.all(10),
                   itemCount: agendamentos.length,
                   itemBuilder: (context, index) {
                     final agendamento = agendamentos[index];
-                    return ListTile(
-                      title: Text('Categoria: ${agendamento.categoria}'),
-                      subtitle: Text(
-                          'Data: ${agendamento.data} - Hora: ${agendamento.hora} - Local ${agendamento.local}'),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit, color: Colors.blue),
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => EditarAgendamentoPage(
-                                      agendamento: agendamento),
+                    return Card(
+                      margin: EdgeInsets.symmetric(
+                          vertical: 5), // Margem menor para os cards
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(10), // Bordas arredondadas
+                      ),
+                      elevation: 3, // Sombra leve para destaque
+                      child: Padding(
+                        padding: const EdgeInsets.all(
+                            8.0), // Padding interno para o card
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment
+                              .center, // Alinha os itens verticalmente ao centro
+                          children: [
+                            // Coluna com os detalhes do agendamento
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    agendamento.categoria,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.calendar_today,
+                                          size: 16, color: Color(0xFF629460)),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        agendamento.data,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.access_time,
+                                          size: 16, color: Color(0xFF629460)),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        agendamento.hora,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.location_on,
+                                          size: 16, color: Color(0xFF629460)),
+                                      SizedBox(width: 5),
+                                      Text(
+                                        agendamento.local,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.blackg),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Ícones de editar e excluir
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.edit, color: Colors.blue),
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditarAgendamentoPage(
+                                                agendamento: agendamento),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              _excluirAgendamento(context, agendamento.id);
-                            },
-                          ),
-                        ],
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () {
+                                    _excluirAgendamento(
+                                        context, agendamento.id);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
