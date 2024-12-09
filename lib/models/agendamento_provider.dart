@@ -29,7 +29,8 @@ class AgendamentoProvider with ChangeNotifier {
         }).toList();
         notifyListeners();
       } else {
-        throw Exception('Falha ao carregar agendamentos: ${response.statusCode}');
+        throw Exception(
+            'Falha ao carregar agendamentos: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Erro ao carregar agendamentos: $e');
@@ -45,8 +46,8 @@ class AgendamentoProvider with ChangeNotifier {
         body: json.encode({
           'categoria': agendamento.categoria,
           'data': agendamento.data,
-          'hora': agendamento.hora,
-          'status': agendamento.status,
+          'horario': agendamento.horario,
+          'servico': agendamento.servico,
           'userId': agendamento.userId,
           'local': agendamento.local,
         }),
@@ -57,8 +58,8 @@ class AgendamentoProvider with ChangeNotifier {
         final newAgendamento = Agendamento.fromJson(id, {
           'categoria': agendamento.categoria,
           'data': agendamento.data,
-          'hora': agendamento.hora,
-          'status': agendamento.status,
+          'horario': agendamento.horario,
+          'servico': agendamento.servico,
           'userId': agendamento.userId,
           'local': agendamento.local,
         });
@@ -74,7 +75,7 @@ class AgendamentoProvider with ChangeNotifier {
   }
 
   Future<void> excluirAgendamento(String id) async {
-    final url = Uri.parse('$_baseUrl/agendamento/$id.json');
+    final url = Uri.parse('$_baseUrl/agendamentos/$id.json');
 
     try {
       final response = await http.delete(url);
@@ -99,8 +100,8 @@ class AgendamentoProvider with ChangeNotifier {
         body: json.encode({
           'categoria': agendamento.categoria,
           'data': agendamento.data,
-          'hora': agendamento.hora,
-          'status': agendamento.status,
+          'horario': agendamento.horario,
+          'servico': agendamento.servico,
           'userId': agendamento.userId,
           'local': agendamento.local,
         }),

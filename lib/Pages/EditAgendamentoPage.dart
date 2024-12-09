@@ -26,21 +26,21 @@ class _EditarAgendamentoPageState extends State<EditarAgendamentoPage> {
     super.initState();
     _categoria = widget.agendamento.categoria;
     _data = widget.agendamento.data;
-    _hora = widget.agendamento.hora;
-    _status = widget.agendamento.status;
+    _hora = widget.agendamento.horario;
+    _status = widget.agendamento.servico;
     _local = widget.agendamento.local;
   }
 
   void _salvarAlteracoes() async {
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save(); 
+      _formKey.currentState!.save();
 
       final updatedAgendamento = Agendamento(
         id: widget.agendamento.id,
         categoria: _categoria,
         data: _data,
-        hora: _hora,
-        status: _status,
+        horario: _hora,
+        servico: _status,
         userId: widget.agendamento.userId,
         local: _local,
       );

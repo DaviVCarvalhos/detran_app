@@ -125,7 +125,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                                           size: 16, color: Color(0xFF629460)),
                                       SizedBox(width: 5),
                                       Text(
-                                        agendamento.hora,
+                                        agendamento.horario,
                                         style: TextStyle(
                                             fontSize: 14, color: Colors.black),
                                       ),

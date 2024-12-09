@@ -1,13 +1,14 @@
+import 'package:detranapp/models/Agendamento.dart';
 import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:detranapp/models/agendamento_provider.dart';
-import 'package:detranapp/models/Agendamento.dart';
+
+import 'package:intl/intl.dart';
 
 class AdicionarAgendamentoPage extends StatefulWidget {
-  final String userId;
-
-  AdicionarAgendamentoPage({required this.userId});
+  final userId;
+  const AdicionarAgendamentoPage({super.key, required this.userId});
 
   @override
   _AdicionarAgendamentoPageState createState() =>
@@ -15,35 +16,133 @@ class AdicionarAgendamentoPage extends StatefulWidget {
 }
 
 class _AdicionarAgendamentoPageState extends State<AdicionarAgendamentoPage> {
-  final _formKey = GlobalKey<FormState>();
-  String _categoria = '';
-  String _data = '';
-  String _hora = '';
-  String _local = '';
-  String _status = 'Agendado';
+  String? categoriaSelecionada;
+  String? servicoSelecionado;
+  String? localAtendimentoSelecionado;
+  DateTime? dataSelecionada;
+  String? horarioSelecionado;
 
-  Future<void> _adicionarAgendamento() async {
-    if (_formKey.currentState?.validate() ?? false) {
+  final List<String> categorias = [
+    "ATENDIMENTOS CNH",
+    "CRT",
+    "ENTREGA CNH EMITIDA",
+    "ENTREGA CNH RECOLHIDA",
+    "CNH POPULAR",
+    "EXAMES PRÁTICOS",
+    "EXAMES TEÓRICOS",
+    "MUTIRÃO CNH",
+  ];
+
+  Future<void> _selecionarData(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: dataSelecionada ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != dataSelecionada) {
+      setState(() {
+        dataSelecionada = picked;
+      });
+    }
+  }
+
+  void _mostrarHorarios(BuildContext context) {
+    List<String> horarios = [];
+    DateTime currentTime = DateTime(2024, 10, 22, 8);
+
+    while (currentTime.hour < 18) {
+      horarios.add(DateFormat('HH:mm').format(currentTime));
+      currentTime = currentTime.add(Duration(minutes: 30));
+    }
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Selecione um horário",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 10),
+              Container(
+                height: 300,
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1.5,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: horarios.length,
+                  itemBuilder: (context, index) {
+                    return ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.black,
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        side: BorderSide(color: Colors.black),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          horarioSelecionado = horarios[index];
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        horarios[index],
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _salvarAgendamento() async {
+    if (categoriaSelecionada != null &&
+        servicoSelecionado != null &&
+        localAtendimentoSelecionado != null &&
+        dataSelecionada != null &&
+        horarioSelecionado != null) {
       final agendamento = Agendamento(
         id: '',
-        categoria: _categoria,
-        data: _data,
-        hora: _hora,
-        status: _status,
+        categoria: categoriaSelecionada!,
+        servico: servicoSelecionado!,
+        data: DateFormat('dd/MM/yyyy').format(dataSelecionada!),
+        horario: horarioSelecionado!,
         userId: widget.userId,
-        local: _local,
+        local: localAtendimentoSelecionado!,
       );
 
       try {
         await Provider.of<AgendamentoProvider>(context, listen: false)
             .adicionarAgendamento(agendamento);
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Agendamento adicionado com sucesso!')));
+          SnackBar(content: Text("Agendamento salvo com sucesso!")),
+        );
         Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Erro ao adicionar agendamento: $e')));
+          SnackBar(content: Text("Erro ao salvar o agendamento.")),
+        );
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Preencha todos os campos antes de salvar.")),
+      );
     }
   }
 
@@ -53,87 +152,144 @@ class _AdicionarAgendamentoPageState extends State<AdicionarAgendamentoPage> {
       appBar: AppBar(
         title: DetranTitle(),
         backgroundColor: Color(0xFF629460),
-        leading: BackButton(
-          color: Colors.white,
-        ),
+        leading: BackButton(color: Colors.white),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildTextFormField(
-                  label: 'Categoria',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira a categoria do agendamento';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => _categoria = value,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Dados do Agendamento",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: "Categoria",
+                  border: OutlineInputBorder(),
                 ),
-                _buildTextFormField(
-                  label: 'Data (YYYY-MM-DD)',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira a data do agendamento';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => _data = value,
+                value: categoriaSelecionada,
+                items: categorias.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    categoriaSelecionada = newValue;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: "Serviço",
+                  border: OutlineInputBorder(),
                 ),
-                _buildTextFormField(
-                  label: 'Hora',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira a hora';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => _hora = value,
+                items: <String>[
+                  'Renovação de CNH',
+                  '2ª Via de CNH',
+                  'Alteração de Dados',
+                  'Outros'
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    servicoSelecionado = newValue;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              DropdownButtonFormField<String>(
+                decoration: InputDecoration(
+                  labelText: "Local de Atendimento",
+                  border: OutlineInputBorder(),
                 ),
-                _buildTextFormField(
-                  label: 'Local',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, insira o local';
-                    }
-                    return null;
-                  },
-                  onChanged: (value) => _local = value,
+                items: <String>[
+                  'Unidade Central',
+                  'Unidade Norte',
+                  'Unidade Sul'
+                ].map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    localAtendimentoSelecionado = newValue;
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText: "Data",
+                  border: OutlineInputBorder(),
+                  hintText: dataSelecionada == null
+                      ? "Selecione uma data"
+                      : DateFormat('dd/MM/yyyy').format(dataSelecionada!),
                 ),
-                SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _adicionarAgendamento,
-                    child: Text('Adicionar Agendamento'),
+                onTap: () => _selecionarData(context),
+              ),
+              const SizedBox(height: 30),
+              Center(
+                child: SizedBox(
+                  width: double.infinity,
+                  child: horarioSelecionado == null
+                      ? ElevatedButton.icon(
+                          onPressed: () {
+                            _mostrarHorarios(context);
+                          },
+                          icon: Icon(Icons.search),
+                          label: Text("Consultar Horários"),
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            backgroundColor: Color(0xFF629460),
+                            foregroundColor: Colors.white,
+                          ),
+                        )
+                      : ElevatedButton(
+                          onPressed: _salvarAgendamento,
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Text("Salvar Agendamento"),
+                        ),
+                ),
+              ),
+              if (horarioSelecionado != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  child: Text(
+                    "Horário Selecionado: $horarioSelecionado",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
                   ),
                 ),
-              ],
-            ),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTextFormField({
-    required String label,
-    required String? Function(String?) validator,
-    required ValueChanged<String> onChanged,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextFormField(
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(),
-        ),
-        validator: validator,
-        onChanged: onChanged,
       ),
     );
   }
