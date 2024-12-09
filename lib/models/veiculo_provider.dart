@@ -7,6 +7,14 @@ class VeiculoProvider with ChangeNotifier {
   final _baseUrl = 'https://detranapp-75e56-default-rtdb.firebaseio.com/';
   Veiculo? veiculoPesquisado;
 
+  List<Veiculo> _meusVeiculos = [];
+  List<Veiculo> get meusVeiculos => _meusVeiculos;
+
+  void resetVeiculos() {
+    _meusVeiculos = [];
+    notifyListeners();
+  }
+
   Future<void> adicionarVeiculo(Veiculo veiculo) async {
     final response = await http.post(Uri.parse('$_baseUrl/veiculos.json'),
         body: json.encode(veiculo.toJson()));
@@ -36,27 +44,19 @@ class VeiculoProvider with ChangeNotifier {
     throw Exception('Veículo não encontrado.');
   }
 
-  Future<List<Veiculo>> buscarVeiculosDoUsuario(String userId) async {
+  Future<void> buscarVeiculosDoUsuario(String userId) async {
     final url = Uri.parse('$_baseUrl/users/$userId/meusVeiculos.json');
 
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        if (response.body == 'null') {
-          return [];
-        }
         Map<String, dynamic> meusVeiculosMap = json.decode(response.body);
 
         List<String> veiculosIds = meusVeiculosMap.keys
             .where((key) => meusVeiculosMap[key] == true)
             .toList();
 
-        if (veiculosIds.isEmpty) {
-          return [];
-        }
-
-        List<Veiculo> veiculos = [];
         for (String veiculoId in veiculosIds) {
           final veiculoUrl = Uri.parse('$_baseUrl/veiculos/$veiculoId.json');
           final veiculoResponse = await http.get(veiculoUrl);
@@ -65,18 +65,21 @@ class VeiculoProvider with ChangeNotifier {
             if (veiculoResponse.body != 'null') {
               Map<String, dynamic> veiculoData =
                   json.decode(veiculoResponse.body);
-              veiculos.add(Veiculo.fromJson(veiculoId, veiculoData));
+              Veiculo novoVeiculo = Veiculo.fromJson(veiculoId, veiculoData);
+
+              if (!_meusVeiculos
+                  .any((veiculo) => veiculo.id == novoVeiculo.id)) {
+                _meusVeiculos.add(novoVeiculo);
+              }
             }
           }
         }
-
-        return veiculos;
+        notifyListeners();
       } else {
         throw Exception('Erro ao buscar veículos do usuário');
       }
     } catch (e) {
       print('Erro na busca de veículos: $e');
-      return [];
     }
   }
 

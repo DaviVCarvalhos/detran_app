@@ -1,4 +1,5 @@
 import 'package:detranapp/models/user_provider.dart';
+import 'package:detranapp/models/veiculo_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:detranapp/Pages/LoginPage.dart';
@@ -10,6 +11,7 @@ class LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     // Obtenha o estado do UserProvider
     final userProvider = Provider.of<UserProvider>(context);
+    final veiculoProvider = Provider.of<VeiculoProvider>(context);
 
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
@@ -24,6 +26,7 @@ class LoginButton extends StatelessWidget {
         if (userProvider.isLoggedIn) {
           // Realizar logout
           userProvider.logout();
+          veiculoProvider.resetVeiculos();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Você saiu com sucesso!")),
           );
