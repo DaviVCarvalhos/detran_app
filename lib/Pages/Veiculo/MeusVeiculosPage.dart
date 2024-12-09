@@ -1,12 +1,6 @@
-import 'package:detranapp/Pages/LoginPage.dart';
-import 'package:detranapp/models/App_User.dart';
 import 'package:detranapp/models/Veiculo.dart';
-import 'package:detranapp/models/user_provider.dart';
-import 'package:detranapp/models/veiculo_provider.dart';
 import 'package:detranapp/widgets/VeiculoDetails.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class MeusVeiculosPage extends StatelessWidget {
   final List<Veiculo> veiculos;
