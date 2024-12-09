@@ -1,3 +1,6 @@
+import 'package:detranapp/Pages/LoginPage.dart';
+import 'package:detranapp/models/user_provider.dart';
+import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:detranapp/models/infracao_provider.dart';
@@ -8,87 +11,114 @@ class InfracoesPage extends StatefulWidget {
 }
 
 class _InfracoesPageState extends State<InfracoesPage> {
-  // Controladores para os campos de texto
-  final TextEditingController _numeroInfracaoController = TextEditingController();
-  final TextEditingController _cpfController = TextEditingController();
-  final TextEditingController _renavamController = TextEditingController();
-  final TextEditingController _placaController = TextEditingController();
+  Future<void>? _carregarInfracoesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final user = userProvider.app_user;
+
+    if (user != null) {
+      _carregarInfracoesFuture =
+          Provider.of<InfracaoProvider>(context, listen: false)
+              .carregarInfracoes(user.id);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final infracaoProvider = Provider.of<InfracaoProvider>(context);
+    final userProvider = Provider.of<UserProvider>(context);
+    final user = userProvider.app_user;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Consultar Infrações'),
+        title: DetranTitle(),
+        backgroundColor: Color(0xFFDC3545),
+        leading: BackButton(color: Colors.white),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Campos de texto para consulta
-            TextField(
-              controller: _numeroInfracaoController,
-              decoration: InputDecoration(labelText: 'Número da Infração'),
-            ),
-            TextField(
-              controller: _cpfController,
-              decoration: InputDecoration(labelText: 'CPF'),
-            ),
-            TextField(
-              controller: _renavamController,
-              decoration: InputDecoration(labelText: 'Renavam'),
-            ),
-            TextField(
-              controller: _placaController,
-              decoration: InputDecoration(labelText: 'Placa'),
-            ),
-            SizedBox(height: 16),
+      body: user == null
+          ? _buildLoginNull(context)
+          : FutureBuilder(
+              future: _carregarInfracoesFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-            // Botão de busca
-            ElevatedButton(
-              onPressed: () {
-                infracaoProvider.fetchInfracoesComFiltros(
-                  numeroInfracao: _numeroInfracaoController.text.trim(),
-                  cpf: _cpfController.text.trim(),
-                  renavam: _renavamController.text.trim(),
-                  placa: _placaController.text.trim(),
+                if (snapshot.hasError) {
+                  return Center(child: Text('Erro ao carregar infrações.'));
+                }
+
+                final infracoes =
+                    Provider.of<InfracaoProvider>(context).infracoes;
+
+                if (infracoes.isEmpty) {
+                  return _buildLoginNull(context);
+                }
+
+                return ListView.builder(
+                  itemCount: infracoes.length,
+                  itemBuilder: (ctx, i) {
+                    final infracao = infracoes[i];
+                    return ListTile(
+                      title: Text(infracao.descricao),
+                      subtitle: Text(
+                          'Valor: R\$ ${infracao.valor.toStringAsFixed(2)}'),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => _excluirInfracao(context, infracao.id),
+                      ),
+                    );
+                  },
                 );
               },
-              child: Text('Buscar'),
             ),
+    );
+  }
 
-            SizedBox(height: 16),
-
-            // Exibir lista de infrações filtradas
-            Expanded(
-              child: Consumer<InfracaoProvider>(
-                builder: (context, provider, child) {
-                  if (provider.infracoes.isEmpty) {
-                    return Center(child: Text('Nenhuma infração encontrada.'));
-                  }
-
-                  return ListView.builder(
-                    itemCount: provider.infracoes.length,
-                    itemBuilder: (context, index) {
-                      final infracao = provider.infracoes[index];
-                      return ListTile(
-                        title: Text('Infração: ${infracao.nInfracao}'),
-                        subtitle: Text(
-                          'CPF: ${infracao.cpf}\n'
-                          'Renavam: ${infracao.renavam}\n'
-                          'Placa: ${infracao.placa}\n'
-                          'Quitada: ${infracao.quitada ? 'Sim' : 'Não'}',
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+  Widget _buildLoginNull(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.local_police, size: 100, color: Colors.grey),
+          SizedBox(height: 20),
+          Text(
+            'Nenhuma infração cadastrada.',
+            style: TextStyle(color: Colors.grey, fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
             ),
-          ],
-        ),
+            child: Text('Consultar Infrações'),
+          ),
+        ],
       ),
     );
+  }
+
+  void _excluirInfracao(BuildContext context, String id) async {
+    try {
+      await Provider.of<InfracaoProvider>(context, listen: false)
+          .excluirInfracao(id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Infração excluída com sucesso!')),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao excluir infração: $e')),
+      );
+    }
   }
 }

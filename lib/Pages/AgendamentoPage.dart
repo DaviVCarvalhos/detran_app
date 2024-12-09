@@ -34,7 +34,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
     final user = userProvider.app_user;
 
     return Scaffold(
-      backgroundColor: Color(0xFFC3E6CB), // Cor de fundo da página
+      backgroundColor: Color(0xFFC3E6CB), 
       appBar: AppBar(
         title: DetranTitle(),
         backgroundColor: Color(0xFF629460),
@@ -79,20 +79,20 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                     final agendamento = agendamentos[index];
                     return Card(
                       margin: EdgeInsets.symmetric(
-                          vertical: 5), // Margem menor para os cards
+                          vertical: 5),
                       shape: RoundedRectangleBorder(
                         borderRadius:
-                            BorderRadius.circular(10), // Bordas arredondadas
+                            BorderRadius.circular(10), 
                       ),
-                      elevation: 3, // Sombra leve para destaque
+                      elevation: 3,
                       child: Padding(
                         padding: const EdgeInsets.all(
-                            8.0), // Padding interno para o card
+                            8.0), 
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment
-                              .center, // Alinha os itens verticalmente ao centro
+                              .center, 
                           children: [
-                            // Coluna com os detalhes do agendamento
+                            
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,77 +1,61 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:http/http.dart' as http;
 import 'package:detranapp/models/Infracao.dart';
 
 class InfracaoProvider with ChangeNotifier {
+  final String _baseUrl =
+      'https://detranapp-75e56-default-rtdb.firebaseio.com/';
   List<Infracao> _infracoes = [];
+
   List<Infracao> get infracoes => _infracoes;
 
-  // Definindo o método de busca com filtros
-  Future<void> fetchInfracoesComFiltros({
-    String? numeroInfracao,
-    String? cpf,
-    String? renavam,
-    String? placa,
-  }) async {
-    final databaseReference = FirebaseDatabase.instance.ref('infracoes');
-
+  // Função para carregar infrações do usuário logado
+  Future<void> carregarInfracoes(String userId) async {
     try {
-      final snapshot = await databaseReference.get();
+      final response = await http.get(Uri.parse('$_baseUrl/infracoes.json'));
 
-      if (snapshot.exists) {
-        _infracoes = []; // Limpando as infrações atuais antes de adicionar as novas
+      if (response.statusCode == 200) {
+        final Map<String, dynamic>? data = json.decode(response.body);
+        _infracoes = (data?.entries ?? []).where((entry) {
+          final infracaoData = entry.value;
+          final userIdValue = infracaoData['userId'];
 
-        for (var entry in snapshot.children) {
-          final infracao = Infracao.fromJson(entry.key!, Map<String, dynamic>.from(entry.value as Map));
-
-          // Verificando os filtros
-          if ((numeroInfracao == null || numeroInfracao.isEmpty || infracao.nInfracao == numeroInfracao) &&
-              (cpf == null || cpf.isEmpty || infracao.cpf == cpf) &&
-              (renavam == null || renavam.isEmpty || infracao.renavam == renavam) &&
-              (placa == null || placa.isEmpty || infracao.placa == placa)) {
-            _infracoes.add(infracao);
-          }
-        }
-
-        notifyListeners(); // Atualiza os ouvintes após a busca
-      } else {
-        _infracoes = [];
+          return userIdValue != null && userIdValue == userId;
+        }).map((entry) {
+          final id = entry.key;
+          final infracaoData = entry.value;
+          return Infracao.fromJson(id, infracaoData);
+        }).toList();
         notifyListeners();
+      } else {
+        throw Exception('Falha ao carregar infrações: ${response.statusCode}');
       }
     } catch (e) {
-      print('Erro ao buscar infrações: $e');
+      throw Exception('Erro ao carregar infrações: $e');
     }
   }
 
-  // Marca a infração como quitada
-  Future<void> marcarComoQuitada(String id) async {
-    final databaseReference = FirebaseDatabase.instance.ref('infracoes/$id');
+  Future<void> excluirInfracao(String id) async {
+    final url = Uri.parse('$_baseUrl/infracoes/$id.json');
 
     try {
-      await databaseReference.update({'quitada': true});
-      _infracoes = _infracoes.map((infracao) {
-        if (infracao.id == id) {
-          return infracao.copyWith(quitada: true);  // Usando copyWith para simplificar a atualização
-        }
-        return infracao;
-      }).toList();
-      notifyListeners();
-    } catch (e) {
-      print('Erro ao marcar infração como quitada: $e');
-    }
-  }
+      final infracao = _infracoes.firstWhere((inf) => inf.id == id);
+      if (!infracao.quitada) {
+        throw Exception(
+            'A infração não pode ser excluída porque não está quitada.');
+      }
 
-  // Exclui uma infração do Firebase
-  Future<void> deletarInfracao(String id) async {
-    final databaseReference = FirebaseDatabase.instance.ref('infracoes/$id');
+      final response = await http.delete(url);
 
-    try {
-      await databaseReference.remove();
-      _infracoes.removeWhere((infracao) => infracao.id == id);
-      notifyListeners();
+      if (response.statusCode == 200) {
+        _infracoes.removeWhere((inf) => inf.id == id);
+        notifyListeners();
+      } else {
+        throw Exception('Falha ao excluir a infração.');
+      }
     } catch (e) {
-      print('Erro ao deletar infração: $e');
+      throw Exception('Erro ao excluir infração: $e');
     }
   }
 }
-
