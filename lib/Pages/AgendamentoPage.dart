@@ -114,8 +114,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                                       Text(
                                         agendamento.data,
                                         style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black),
+                                            fontSize: 14, color: Colors.black),
                                       ),
                                     ],
                                   ),
@@ -128,8 +127,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                                       Text(
                                         agendamento.hora,
                                         style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black),
+                                            fontSize: 14, color: Colors.black),
                                       ),
                                     ],
                                   ),
@@ -142,8 +140,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                                       Text(
                                         agendamento.local,
                                         style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.blackg),
+                                            fontSize: 14, color: Colors.black),
                                       ),
                                     ],
                                   ),
