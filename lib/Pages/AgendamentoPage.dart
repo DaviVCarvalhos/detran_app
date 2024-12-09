@@ -202,7 +202,7 @@ Widget _buildNoAgendamentoMessage(BuildContext context) {
         Icon(Icons.event_note, size: 100, color: Colors.black),
         SizedBox(height: 20),
         Text(
-          'Você não tem infrações registradas.',
+          'Você não tem agendamentos registrados.',
           style: TextStyle(color: Colors.black, fontSize: 16),
           textAlign: TextAlign.center,
         ),
