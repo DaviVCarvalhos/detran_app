@@ -69,7 +69,7 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
                     Provider.of<AgendamentoProvider>(context).agendamentos;
 
                 if (agendamentos.isEmpty) {
-                  return _buildLoginNull(context);
+                  return _buildNoAgendamentoMessage(context);
                 }
 
                 return ListView.builder(
@@ -194,6 +194,23 @@ class _AgendamentoPageState extends State<AgendamentoPage> {
   }
 }
 
+Widget _buildNoAgendamentoMessage(BuildContext context) {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.event_note, size: 100, color: Colors.black),
+        SizedBox(height: 20),
+        Text(
+          'Você não tem infrações registradas.',
+          style: TextStyle(color: Colors.black, fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ),
+  );
+}
+
 void _redirectToLogin(BuildContext context) {
   Navigator.pushReplacement(
     context,
@@ -217,12 +234,12 @@ Widget _buildLoginNull(BuildContext context) {
         Icon(
           Icons.event_note,
           size: 100,
-          color: Colors.grey,
+          color: Colors.black,
         ),
         SizedBox(height: 20),
         Text(
           'Nenhum agendamento cadastrado.',
-          style: TextStyle(color: Colors.grey, fontSize: 16),
+          style: TextStyle(color: Colors.black, fontSize: 16),
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 20),

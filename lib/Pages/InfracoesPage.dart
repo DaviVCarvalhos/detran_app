@@ -61,7 +61,7 @@ class _InfracoesPageState extends State<InfracoesPage> {
                     Provider.of<InfracaoProvider>(context).infracoes;
 
                 if (infracoes.isEmpty) {
-                  return _buildLoginNull(context);
+                  return _buildNoInfracoesMessage(context);
                 }
 
                 return ListView.builder(
@@ -123,11 +123,11 @@ class _InfracoesPageState extends State<InfracoesPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.local_police, size: 100, color: Colors.grey),
+          Icon(Icons.local_police, size: 100, color: Colors.black),
           SizedBox(height: 20),
           Text(
             'Nenhuma infração cadastrada.',
-            style: TextStyle(color: Colors.grey, fontSize: 16),
+            style: TextStyle(color: Colors.black, fontSize: 16),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 20),
@@ -161,5 +161,22 @@ class _InfracoesPageState extends State<InfracoesPage> {
         SnackBar(content: Text('Erro ao excluir infração: $e')),
       );
     }
+  }
+
+  Widget _buildNoInfracoesMessage(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.check_circle_outline, size: 100, color: Colors.black),
+          SizedBox(height: 20),
+          Text(
+            'Você não tem infrações registradas.',
+            style: TextStyle(color: Colors.black, fontSize: 16),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
   }
 }
