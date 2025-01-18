@@ -1,12 +1,13 @@
-import 'package:detranapp/Pages/CadastroPage.dart';
-import 'package:detranapp/models/App_User.dart';
-import 'package:detranapp/models/user_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:local_auth/local_auth.dart';
 
-import 'package:detranapp/Pages/HomePage.dart';
-import 'package:detranapp/widgets/DetranTitle.dart';
+import 'HomePage.dart';
+import 'CadastroPage.dart';
+import '../models/user_provider.dart';
+import '../models/App_User.dart';
+import '../widgets/DetranTitle.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -22,6 +23,83 @@ class _LoginPageState extends State<LoginPage> {
   final _senha = TextEditingController();
   bool _exibirSenha = false;
   final _formKey = GlobalKey<FormState>();
+  final LocalAuthentication auth = LocalAuthentication();
+
+  // Verifica se a biometria está disponível no dispositivo
+  Future<bool> _isBiometricAvailable() async {
+    try {
+      return await auth.canCheckBiometrics || await auth.isDeviceSupported();
+    } catch (e) {
+      print('Erro ao verificar biometria: $e');
+      return false;
+    }
+  }
+
+  // Realiza a autenticação biométrica
+  Future<void> _authenticateWithBiometrics() async {
+    print("Verificando biometria...");
+    try {
+      final isAvailable = await _isBiometricAvailable();
+      print("Biometria disponível: $isAvailable");
+
+      if (!isAvailable) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Biometria não está disponível no dispositivo.')),
+        );
+        return;
+      }
+
+      final isAuthenticated = await auth.authenticate(
+        localizedReason: 'Autentique-se para fazer login',
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          useErrorDialogs: true,
+          stickyAuth: true,
+        ),
+      );
+
+      print("Autenticação concluída: $isAuthenticated");
+
+      if (isAuthenticated) {
+        _loginWithBiometricUser();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Autenticação biométrica falhou.')),
+        );
+      }
+    } catch (e) {
+      print('Erro ao autenticar: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro: $e')),
+      );
+    }
+  }
+
+  // Simula o login após autenticação biométrica
+  Future<void> _loginWithBiometricUser() async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    final currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      userProvider.login(currentUser);
+
+      App_User? appUser = await userProvider.getUserDataFromDatabase();
+      if (appUser != null) {
+        print(appUser.cpf);
+      }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Nenhum usuário encontrado para login biométrico.')),
+      );
+    }
+  }
 
   Future<void> loginWithEmailPassword() async {
     setState(() {
@@ -91,82 +169,59 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     Image.asset('images/detranlogo.jpg'),
                     const SizedBox(height: 20),
-                    // Substituindo os TextFormFields
-                    Column(
-                      children: [
-                        Row(
-                          children: const [],
+                    _buildTextField(
+                      controller: email,
+                      label: "Email",
+                      hint: "Inserir email",
+                    ),
+                    const SizedBox(height: 20),
+                    _buildTextField(
+                      controller: _senha,
+                      label: "Senha",
+                      hint: "Inserir senha",
+                      obscureText: !_exibirSenha,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _exibirSenha
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
                         ),
-                        const SizedBox(height: 8),
-                        _buildTextField(
-                          controller: email,
-                          label: "Email",
-                          hint: "Inserir email",
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: const [],
-                        ),
-                        const SizedBox(height: 8),
-                        _buildTextField(
-                          controller: _senha,
-                          label: "Senha",
-                          hint: "Inserir senha",
-                          obscureText: !_exibirSenha,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _exibirSenha
-                                  ? Icons.visibility_off_outlined
-                                  : Icons.visibility_outlined,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _exibirSenha = !_exibirSenha;
-                              });
+                        onPressed: () {
+                          setState(() {
+                            _exibirSenha = !_exibirSenha;
+                          });
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              if (_formKey.currentState!.validate()) {
+                                loginWithEmailPassword();
+                              }
                             },
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: _isLoading
-                              ? null
-                              : () {
-                                  if (_formKey.currentState!.validate()) {
-                                    loginWithEmailPassword();
-                                  }
-                                },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 0, 128, 198),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30, vertical: 10),
-                          ),
-                          child: const Text(
-                            "Entrar",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: _isLoading
-                              ? null
-                              : () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CadastroPage(),
-                                    ),
-                                  );
-                                },
-                          child: const Text(
-                            "Não Possui Conta? Cadastre-se!",
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 52, 104, 248),
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
+                      child: const Text("Entrar"),
+                    ),
+                    ElevatedButton.icon(
+                      onPressed:
+                          _isLoading ? null : _authenticateWithBiometrics,
+                      icon: const Icon(Icons.fingerprint),
+                      label: const Text("Login com biometria"),
+                    ),
+                    TextButton(
+                      onPressed: _isLoading
+                          ? null
+                          : () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CadastroPage(),
+                                ),
+                              );
+                            },
+                      child: const Text("Não Possui Conta? Cadastre-se!"),
                     ),
                   ],
                 ),
@@ -177,10 +232,7 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               color: Colors.black.withOpacity(0.5),
               child: const Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                      Color.fromARGB(255, 0, 128, 198)),
-                ),
+                child: CircularProgressIndicator(),
               ),
             ),
         ],
