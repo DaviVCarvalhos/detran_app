@@ -2,6 +2,7 @@ import 'package:detranapp/widgets/DetranTitle.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart'; // Importa o pacote local_auth
 
 class CadastroPage extends StatefulWidget {
   const CadastroPage({super.key});
@@ -20,7 +21,30 @@ class _CadastroPageState extends State<CadastroPage> {
   final _telefoneController = TextEditingController();
   final _dataNascimentoController = TextEditingController();
   bool _exibirSenha = false;
-  bool _isLoading = false; // Variável para controlar o carregamento
+  bool _isLoading = false;
+
+  final LocalAuthentication _localAuth =
+      LocalAuthentication(); // Instancia o LocalAuthentication
+
+  Future<void> _authenticateWithBiometrics() async {
+    try {
+      bool isAuthenticated = await _localAuth.authenticate(
+        localizedReason: 'Autentique-se para concluir o cadastro',
+        options: AuthenticationOptions(
+          stickyAuth: true,
+        ),
+      );
+      if (!isAuthenticated) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Autenticação biométrica falhou")),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro ao realizar autenticação biométrica: $e")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,15 +145,6 @@ class _CadastroPageState extends State<CadastroPage> {
                           const BorderSide(color: Color(0xFF0E64B7), width: 2),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    errorBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: Colors.red, width: 1.5),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.red, width: 2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
                   ),
                   onTap: () async {
                     DateTime? selectedDate = await showDatePicker(
@@ -146,24 +161,17 @@ class _CadastroPageState extends State<CadastroPage> {
                       });
                     }
                   },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, selecione sua data de nascimento';
-                    }
-                    return null;
-                  },
                 ),
-                const SizedBox(height: 20),
                 const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         setState(() {
-                          _isLoading = true; // Ativa o carregamento
+                          _isLoading = true;
                         });
 
-                        // Exibe o anel de carregamento enquanto o cadastro está em andamento
+                        // Exibe o anel de carregamento
                         showDialog(
                           context: context,
                           barrierDismissible: false,
@@ -184,6 +192,9 @@ class _CadastroPageState extends State<CadastroPage> {
 
                           String userId = userCredential.user!.uid;
 
+                          // Chama a autenticação biométrica
+                          await _authenticateWithBiometrics();
+
                           DatabaseReference usersRef =
                               FirebaseDatabase.instance.ref('users');
                           await usersRef.child(userId).set({
@@ -193,6 +204,8 @@ class _CadastroPageState extends State<CadastroPage> {
                             'telefone': _telefoneController.text.trim(),
                             'dataNascimento':
                                 _dataNascimentoController.text.trim(),
+                            'biometria':
+                                true, // Salva se a biometria foi configurada
                           });
 
                           ScaffoldMessenger.of(context).showSnackBar(

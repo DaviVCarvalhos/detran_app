@@ -81,6 +81,7 @@ class _LoginPageState extends State<LoginPage> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final currentUser = FirebaseAuth.instance.currentUser;
 
+    // Verifique se o usuário está autenticado no Firebase
     if (currentUser != null) {
       userProvider.login(currentUser);
 
@@ -94,6 +95,7 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(builder: (context) => HomePage()),
       );
     } else {
+      // Se o usuário não estiver autenticado, peça a biometria novamente
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Nenhum usuário encontrado para login biométrico.')),
