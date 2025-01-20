@@ -1,186 +1,247 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PostosInteriorPage extends StatelessWidget {
   const PostosInteriorPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Color(0xFFBEE5EB),
-      padding: EdgeInsets.all(16.0),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            buildInfoCard(
-              '1ª CIRETRAN - MOSSORÓ',
-              'Centro Administrativo Integrado Diran dos Ramos Amaral, Av. do Contorno, nº 1020, DixSept Rosado, 59.607-042 ',
-              'Segunda a Sexta, das 07h às 13h. ',
-            ),
-            buildInfoCard(
-              '2ª CIRETRAN - CAICÓ',
-              'Rua Marina Neves Dantas, nº 35, Central do Cidadão, Maynard, 59.300-000',
-              'Segunda a Sexta, das 07h às 13h. ',
-            ),
-            buildInfoCard(
-              '3ª CIRETRAN - NOVA CRUZ',
-              'Rua Senador Georgino Avelino, nº 42, Frei Damião, 59.200-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              '4ª CIRETRAN - CURRAIS NOVOS',
-              'Rua Tomaz do O, nº 18, JK, 59.380-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              '5ª CIRETRAN - PAU DOS FERROS',
-              'Praça Cristo Rei, nº 18, Centro, 59.900-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'ANGICOS',
-              'Rua Vicente Ferreira Barbosa, Alto da Esperança, 59.515-000',
-              'Segunda a Sexta, das 08h às 13h.',
-            ),
-            buildInfoCard(
-              'APODI',
-              'Rua Deputado Dalton Cunha, nº 41, Portal da Chapada, 59.700-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'AREIA BRANCA',
-              'Rua Jorge Caminha, s/n, Centro, 59.625-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'ASSÚ',
-              'Av. Senador João Câmara, nº 500, Bairro Frutilândia, 59.650-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'CANGUARETAMA',
-              'Rua Nossa Senhora da Conceição, nº 44, Centro, 59.180-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'CARAÚBAS',
-              'Rua Epitácio Pessoa, nº 234, Centro, 59.780-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'CEARÁ-MIRIM',
-              'Rua Luiz Lopes Varela, nº 290, Centro, 59.570-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'GOIANINHA',
-              'Rua João Tibúrcio, nº 19, Centro, 59.180-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'JOÃO CÂMARA',
-              'Rua Pedro Siqueira, nº 91, Centro, 59.550-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'JUCURUTU',
-              'Av. Doutor José Bezerra de Araújo, nº 245, Centro, 59.390-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'LAJES',
-              'Rua Francisco Pedro de Góes, nº 5, Centro, 59.555-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'MACAÍBA',
-              'Rua da Conceição, nº 124, Centro, 59.270-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'MACAU',
-              'Rua Augusto Severo, nº 15, Centro, 59.595-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'PARELHAS',
-              'Rua Laurentino Bezerra, nº 160, Centro, 59.300-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'PATU',
-              'Rua Doutor José Augusto, nº 54, Centro, 59.780-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'SANTA CRUZ',
-              'Rua Santo Antônio, nº 83, Centro, 59.200-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'SÃO PAULO DO POTENGI',
-              'Rua Antônio Lopes da Silva, nº 215, Centro, 59.400-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'SÃO JOSÉ DE MIPIBU',
-              'Av. Pedro Ferreira, nº 1, Bairro Centro, 59.230-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-            buildInfoCard(
-              'SÃO MIGUEL',
-              'Rua Deputado Hesíquio Fernandes, nº 146, Centro, 59.920-000',
-              'Segunda a Sexta, das 07h às 13h.',
-            ),
-          ],
+    return Scaffold(
+      body: Container(
+        color: const Color(0xFFBEE5EB),
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: const [
+              InfoCard(
+                title: '1ª CIRETRAN - MOSSORÓ',
+                address:
+                    'Terminal Rodoviário Mossoró - de, Estr. do Contôrno, 1020 - Aeroporto, Mossoró - RN, 59600-971',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-5.185629856665561, -37.37400671874656),
+              ),
+              InfoCard(
+                title: '2ª CIRETRAN - CAICÓ',
+                address:
+                    'Rua Marina Neves Dantas, nº 35, Central do Cidadão, Maynard, 59.300-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-6.477623486694452, -37.07853858804198),
+              ),
+              InfoCard(
+                title: '3ª CIRETRAN - NOVA CRUZ',
+                address:
+                    'R. Dep. Djalma Marinho, 46, Nova Cruz - RN, 59215-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-6.4850658871429765, -35.43040551131389),
+              ),
+              InfoCard(
+                title: '4ª CIRETRAN - CURRAIS NOVOS',
+                address: 'Rua Tomaz do O, nº 18, JK, 59.380-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-6.254607334429272, -36.518303530371604),
+              ),
+              InfoCard(
+                title: '5ª CIRETRAN - PAU DOS FERROS',
+                address:
+                    'R. Carloto Fernandes Távora, 877 - São Benedito, Pau dos Ferros - RN, 59900-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-6.117685297332101, -38.20297117455498),
+              ),
+              InfoCard(
+                title: 'APODI',
+                address:
+                    'Rua Deputado Dalton Cunha, nº 41, Portal da Chapada, 59.700-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-5.693812438866801, -35.8201148517951),
+              ),
+              InfoCard(
+                title: 'AÇÚ',
+                address:
+                    'Av. Sen. João Severian da Câmara, Açu - RN, 59650-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-5.575687710167941, -36.92294491032717),
+              ),
+              InfoCard(
+                title: 'CANGUARETAMA',
+                address:
+                    'Av. Nossa Senhora da Conceição, 44, Canguaretama - RN, 59190-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-6.372557605305452, -35.14379488989795),
+              ),
+              InfoCard(
+                title: 'CEARÁ-MIRIM',
+                address: 'Rua Luiz Lopes Varela, nº 290, Centro, 59.570-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-5.63740559474333, -35.41993068116747),
+              ),
+              InfoCard(
+                title: 'GOIANINHA',
+                address:
+                    'R. Prof. João Tibúrcio, 19, Goianinha - RN, 59173-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-6.265537569265145, -35.21069575920793),
+              ),
+              InfoCard(
+                title: 'MACAÍBA',
+                address: 'R. da Conceição, 124, Macaíba - RN, 59280-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-5.857400965926267, -35.35337091867808),
+              ),
+              InfoCard(
+                title: 'PARELHAS',
+                address:
+                    'R. Laurentino Bezerra, 160 - Centro, Parelhas - RN, 59360-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-6.690194568191267, -36.657347761057906),
+              ),
+              InfoCard(
+                title: 'SÃO JOSÉ DE MIPIBU',
+                address:
+                    'Av. Moizaniel de Carvalho, 366 - Manoel Alves de Souza, São José de Mipibu - RN, 59162-000',
+                hours: 'Segunda a Sexta, das 07h às 13h.',
+                location: LatLng(-6.036912574405717, -35.145573552476385),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+}
 
-  Widget buildInfoCard(String title, String address, String hours) {
+class InfoCard extends StatefulWidget {
+  final String title;
+  final String address;
+  final String hours;
+  final LatLng location;
+
+  const InfoCard({
+    Key? key,
+    required this.title,
+    required this.address,
+    required this.hours,
+    required this.location,
+  }) : super(key: key);
+
+  @override
+  State<InfoCard> createState() => _InfoCardState();
+}
+
+class _InfoCardState extends State<InfoCard> {
+  bool showMap = false;
+
+  void _launchMaps() async {
+    final googleMapsUrl =
+        'https://www.google.com/maps/search/?api=1&query=${widget.location.latitude},${widget.location.longitude}';
+    if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+      await launchUrl(Uri.parse(googleMapsUrl));
+    } else {
+      throw 'Não foi possível abrir o Google Maps.';
+    }
+  }
+
+  void _showSnackbar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: const Text('Abrir localização no Google Maps?'),
+      action: SnackBarAction(
+        label: 'ABRIR',
+        onPressed: _launchMaps,
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
       elevation: 5,
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  showMap = !showMap;
+                });
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on, color: Colors.blue),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          widget.address,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time, color: Colors.blue),
+                      const SizedBox(width: 8),
+                      Text(
+                        widget.hours,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: const [
+                      Icon(Icons.touch_app, color: Colors.blue),
+                      SizedBox(width: 8),
+                      Text(
+                        'Toque para ver o mapa',
+                        style: TextStyle(fontSize: 14, color: Colors.blue),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.location_on, color: Colors.blue),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    address,
-                    style: TextStyle(fontSize: 16),
+            if (showMap) ...[
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () => _showSnackbar(context),
+                child: SizedBox(
+                  height: 200,
+                  child: GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: widget.location,
+                      zoom: 16,
+                    ),
+                    markers: {
+                      Marker(
+                        markerId: MarkerId(widget.title),
+                        position: widget.location,
+                      ),
+                    },
                   ),
                 ),
-              ],
-            ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(Icons.access_time, color: Colors.blue),
-                SizedBox(width: 8),
-                Text(
-                  hours,
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
+              ),
+            ],
           ],
         ),
       ),

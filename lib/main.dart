@@ -17,9 +17,12 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
-        ChangeNotifierProvider<VeiculoProvider>(create: (_) => VeiculoProvider()),
-        ChangeNotifierProvider<InfracaoProvider>(create: (_) => InfracaoProvider()),
-        ChangeNotifierProvider<AgendamentoProvider>(create: (_) => AgendamentoProvider()),
+        ChangeNotifierProvider<VeiculoProvider>(
+            create: (_) => VeiculoProvider()),
+        ChangeNotifierProvider<InfracaoProvider>(
+            create: (_) => InfracaoProvider()),
+        ChangeNotifierProvider<AgendamentoProvider>(
+            create: (_) => AgendamentoProvider()),
       ],
       child: MyApp(),
     ),
