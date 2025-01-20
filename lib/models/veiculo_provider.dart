@@ -1,4 +1,5 @@
 import 'package:detranapp/models/Veiculo.dart';
+import 'package:detranapp/util/veiculo_db.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -9,6 +10,8 @@ class VeiculoProvider with ChangeNotifier {
 
   List<Veiculo> _meusVeiculos = [];
   List<Veiculo> get meusVeiculos => _meusVeiculos;
+
+  final VeiculoDb _veiculoDb = VeiculoDb();
 
   void resetVeiculos() {
     _meusVeiculos = [];
@@ -70,16 +73,20 @@ class VeiculoProvider with ChangeNotifier {
               if (!_meusVeiculos
                   .any((veiculo) => veiculo.id == novoVeiculo.id)) {
                 _meusVeiculos.add(novoVeiculo);
+                _veiculoDb.adicionarVeiculo(novoVeiculo, userId);
               }
             }
           }
         }
         notifyListeners();
       } else {
-        throw Exception('Erro ao buscar veículos do usuário');
+        _meusVeiculos = await _veiculoDb.recuperarVeiculos(userId);
+        notifyListeners();
       }
     } catch (e) {
       print('Erro na busca de veículos: $e');
+      _meusVeiculos = await _veiculoDb.recuperarVeiculos(userId);
+      notifyListeners();
     }
   }
 
@@ -93,6 +100,7 @@ class VeiculoProvider with ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
+      _veiculoDb.adicionarVeiculo(veiculo, userId);
       notifyListeners();
     } else {
       throw Exception('Erro ao adicionar veículo ao usuário');

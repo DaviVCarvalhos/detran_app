@@ -37,6 +37,7 @@ class Veiculo {
       'nomeProprietario': nomeProprietario,
       if (proprietarioAnterior != null)
         'proprietarioAnterior': proprietarioAnterior,
+      if (id != null) 'id': id,
     };
   }
 }

@@ -16,23 +16,32 @@ class Infracao {
   });
 
   factory Infracao.fromJson(String id, Map<String, dynamic> json) {
+    bool quitadaValue = false;
+    var quitadaRaw = json['quitada'];
+    if (quitadaRaw is bool) {
+      quitadaValue = quitadaRaw;
+    } else if (quitadaRaw is int) {
+      quitadaValue = quitadaRaw == 1;
+    }
+
     return Infracao(
       id: id,
-      descricao: json['descricao'],
-      placa: json['placa'],
-      valor: json['valor'],
-      quitada: json['quitada'] ?? false,
-      userId: json['userId']
+      descricao: json['descricao'] ?? '',
+      placa: json['placa'] ?? '',
+      valor: (json['valor'] ?? 0.0).toDouble(),
+      quitada: quitadaValue,
+      userId: json['userId'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'descricao': descricao,
       'placa': placa,
       'valor': valor,
       'quitada': quitada,
-      'userId' : userId
+      'userId': userId
     };
   }
 }

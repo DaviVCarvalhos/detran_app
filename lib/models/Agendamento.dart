@@ -26,4 +26,15 @@ class Agendamento {
         userId: json['userId'],
         local: json['local']);
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'categoria': categoria,
+      'data': data,
+      'horario': horario,
+      'servico': servico,
+      'userId': userId,
+      'local': local,
+    };
+  }
 }

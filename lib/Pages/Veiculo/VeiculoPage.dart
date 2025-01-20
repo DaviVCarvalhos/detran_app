@@ -16,7 +16,7 @@ class VeiculoPage extends StatefulWidget {
 
 class _VeiculoPageState extends State<VeiculoPage> {
   Widget? _conteudoAtual;
-  bool _isLoading = true; // Adicionando um estado de carregamento
+  bool _isLoading = true;
 
   @override
   void initState() {

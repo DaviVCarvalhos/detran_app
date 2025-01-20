@@ -37,6 +37,8 @@ dependencies:
   local_auth: ^2.1.0
   google_maps_flutter: ^2.7.0
   location: ^7.0.0
+  sqflite: ^2.0.0+4
+  path: ^1.8.0
 
   
   flutter:
