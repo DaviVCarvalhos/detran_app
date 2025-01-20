@@ -8,6 +8,7 @@ import 'CadastroPage.dart';
 import '../models/user_provider.dart';
 import '../models/App_User.dart';
 import '../widgets/DetranTitle.dart';
+// Certifique-se de importar o pacote
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -18,7 +19,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
-
+  final LocalAuthentication _localAuth = LocalAuthentication();
   final email = TextEditingController();
   final _senha = TextEditingController();
   bool _exibirSenha = false;
@@ -36,70 +37,65 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // Realiza a autenticação biométrica
-  Future<void> _authenticateWithBiometrics() async {
-    print("Verificando biometria...");
-    try {
-      final isAvailable = await _isBiometricAvailable();
-      print("Biometria disponível: $isAvailable");
 
+  // Simula o login após autenticação biométrica
+  Future<void> _loginWithBiometrics() async {
+    setState(() {
+      _isLoading = true; // Inicia o carregamento
+    });
+
+    try {
+      // Verifica se o dispositivo suporta autenticação biométrica
+      bool isAvailable = await _localAuth.canCheckBiometrics;
       if (!isAvailable) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Biometria não está disponível no dispositivo.')),
+              content: Text("Biometria não disponível ou não configurada")),
         );
         return;
       }
 
-      final isAuthenticated = await auth.authenticate(
+      // Realiza a autenticação biométrica
+      bool isAuthenticated = await _localAuth.authenticate(
         localizedReason: 'Autentique-se para fazer login',
-        options: const AuthenticationOptions(
-          biometricOnly: true,
-          useErrorDialogs: true,
+        options: AuthenticationOptions(
           stickyAuth: true,
         ),
       );
 
-      print("Autenticação concluída: $isAuthenticated");
-
       if (isAuthenticated) {
-        _loginWithBiometricUser();
+        // Aqui você pode fazer o login com a autenticação biométrica
+        User? user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
+          userProvider.login(user);
+
+          // Redireciona o usuário para a página principal após o login
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    HomePage()), // Substitua pela sua página inicial
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Usuário não autenticado")),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Autenticação biométrica falhou.')),
+          const SnackBar(content: Text("Autenticação falhou")),
         );
       }
     } catch (e) {
-      print('Erro ao autenticar: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro: $e')),
+        SnackBar(content: Text("Erro ao realizar autenticação biométrica: $e")),
       );
-    }
-  }
-
-  // Simula o login após autenticação biométrica
-  Future<void> _loginWithBiometricUser() async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final currentUser = FirebaseAuth.instance.currentUser;
-
-    // Verifique se o usuário está autenticado no Firebase
-    if (currentUser != null) {
-      userProvider.login(currentUser);
-
-      App_User? appUser = await userProvider.getUserDataFromDatabase();
-      if (appUser != null) {
-        print(appUser.cpf);
-      }
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    } else {
-      // Se o usuário não estiver autenticado, peça a biometria novamente
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Nenhum usuário encontrado para login biométrico.')),
-      );
+    } finally {
+      setState(() {
+        _isLoading = false; // Finaliza o carregamento
+      });
     }
   }
 
@@ -207,8 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text("Entrar"),
                     ),
                     ElevatedButton.icon(
-                      onPressed:
-                          _isLoading ? null : _authenticateWithBiometrics,
+                      onPressed: _isLoading ? null : _loginWithBiometrics,
                       icon: const Icon(Icons.fingerprint),
                       label: const Text("Login com biometria"),
                     ),

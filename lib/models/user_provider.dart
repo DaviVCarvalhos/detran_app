@@ -40,14 +40,16 @@ class UserProvider with ChangeNotifier {
         final data = snapshot.value as Map<dynamic, dynamic>;
         App_User app_user =
             App_User.fromMap(uid, Map<String, dynamic>.from(data));
-        return app_user;
-      } else {
-        return null;
+
+        // Verifica se a biometria foi configurada
+        if (data['biometria'] == true) {
+          return app_user;
+        }
       }
     } catch (e) {
       print('Erro ao buscar dados do usuário: $e');
-      return null;
     }
+    return null;
   }
 
   Future<void> updateUserInFirebase(

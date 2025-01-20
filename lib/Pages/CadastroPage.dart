@@ -38,6 +38,29 @@ class _CadastroPageState extends State<CadastroPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Autenticação biométrica falhou")),
         );
+      } else {
+        // Salva no Firebase a configuração de biometria
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _senhaController.text.trim(),
+        );
+
+        String userId = userCredential.user!.uid;
+
+        DatabaseReference usersRef = FirebaseDatabase.instance.ref('users');
+        await usersRef.child(userId).set({
+          'nome': _nomeController.text.trim(),
+          'cpf': _cpfController.text.trim(),
+          'email': _emailController.text.trim(),
+          'telefone': _telefoneController.text.trim(),
+          'dataNascimento': _dataNascimentoController.text.trim(),
+          'biometria': true, // Marca que a biometria foi configurada
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Usuário registrado com sucesso!")),
+        );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
