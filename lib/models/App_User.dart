@@ -1,3 +1,6 @@
+import 'package:image_picker/image_picker.dart'; // Para o ImagePicker
+import 'package:cross_file/cross_file.dart'; // Para garantir que você está utilizando a versão correta de XFile
+
 import 'package:detranapp/models/Veiculo.dart';
 
 class App_User {
@@ -7,7 +10,8 @@ class App_User {
       required this.datanascimento,
       required this.nome,
       required this.email,
-      required this.phone_number});
+      required this.phone_number,
+      XFile? profileImage});
 
   String id;
   String cpf;
@@ -16,6 +20,8 @@ class App_User {
   String phone_number;
   DateTime datanascimento;
   List<Veiculo> veiculos = [];
+
+  XFile? profileImage;
 
   factory App_User.fromMap(String id, Map<String, dynamic> map) {
     try {

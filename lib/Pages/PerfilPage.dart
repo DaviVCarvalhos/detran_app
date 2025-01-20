@@ -1,9 +1,10 @@
 import 'package:detranapp/models/App_User.dart';
 import 'package:detranapp/models/user_provider.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart'; // Importação do pacote para capturar imagens
 import 'package:provider/provider.dart';
+import 'dart:io';
 
 class PerfilPage extends StatefulWidget {
   @override
@@ -20,8 +21,10 @@ class _PerfilPageState extends State<PerfilPage> {
   bool _isEditing = false;
   bool _userIsNull = false;
   DateTime? _selectedDate;
+  XFile? _profileImage; // Variável para armazenar a imagem do perfil
 
-  @override
+  final ImagePicker _picker = ImagePicker(); // Instância do ImagePicker
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +49,9 @@ class _PerfilPageState extends State<PerfilPage> {
           text:
               "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}",
         );
+        // Atribuição da imagem do perfil se existir
+        _profileImage = user
+            .profileImage; // Assumindo que a classe App_User tenha o campo profileImage
       });
     }
   }
@@ -76,6 +82,32 @@ class _PerfilPageState extends State<PerfilPage> {
         ),
       ),
     );
+  }
+
+  // Método para escolher a foto do perfil
+  Future<void> _chooseProfileImage() async {
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.gallery, // Galeria de imagens
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = pickedFile;
+      });
+    }
+  }
+
+  // Método para tirar uma nova foto do perfil com a câmera
+  Future<void> _takeProfilePhoto() async {
+    final pickedFile = await _picker.pickImage(
+      source: ImageSource.camera, // Câmera
+    );
+
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = pickedFile;
+      });
+    }
   }
 
   @override
@@ -124,6 +156,47 @@ class _PerfilPageState extends State<PerfilPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
+              // Exibição da foto do perfil
+              GestureDetector(
+                  onTap: () {
+                    // Exibe opções de galeria ou câmera
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Escolher Foto'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                _chooseProfileImage();
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Galeria'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                _takeProfilePhoto();
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Câmera'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey[200],
+                    backgroundImage: _profileImage != null
+                        ? FileImage(File(
+                            _profileImage!.path)) // Converte de XFile para File
+                        : null,
+                    child: _profileImage == null
+                        ? const Icon(Icons.person, size: 50)
+                        : null,
+                  )),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _nomeController,
                 cursorColor: const Color.fromARGB(255, 52, 104, 248),
@@ -188,6 +261,8 @@ class _PerfilPageState extends State<PerfilPage> {
                               cpf: _cpfController.text,
                               datanascimento: _selectedDate!,
                               email: user.email,
+                              profileImage:
+                                  _profileImage, // Atualiza a imagem do perfil
                             );
 
                             await userProvider.updateUserInFirebase(
@@ -254,8 +329,6 @@ class _PerfilPageState extends State<PerfilPage> {
                           const SnackBar(
                               content: Text('Usuário deletado com sucesso!')),
                         );
-
-                        // Navegar para a tela de login
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
