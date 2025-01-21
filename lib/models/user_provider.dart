@@ -8,14 +8,17 @@ class UserProvider with ChangeNotifier {
   User? _currentUser;
   User? get currentUser => _currentUser;
   bool get isLoggedIn => _currentUser != null;
+  bool _shouldRememberUser = false;
+
+  bool get shouldRememberUser => _shouldRememberUser;
 
   App_User? _app_user;
   App_User? get app_user => _app_user;
 
-  void login(User user) async {
+  void login(User user, bool rememberUser) async {
     _currentUser = user;
     _app_user = await getUserDataFromDatabase();
-    await saveUserSession(_app_user!);
+    await saveUserSession(_app_user!, rememberUser);
     notifyListeners();
   }
 
@@ -28,10 +31,24 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> saveUserSession(App_User user) async {
+  Future<void> saveUserSession(App_User user, bool rememberUser) async {
+    _shouldRememberUser = rememberUser;
+
+    if (rememberUser) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setString('id', user.id);
+      prefs.setString('email', user.email);
+    }
+    notifyListeners();
+  }
+
+  // Remove os dados da sessão se o usuário desmarcar "manter-se conectado"
+  Future<void> clearUserSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('id', user.id);
-    await prefs.setString('email', user.email);
+    prefs.remove('id');
+    prefs.remove('email');
+    _shouldRememberUser = false;
+    notifyListeners();
   }
 
   Future<Map<String, String>?> getUserSession() async {
