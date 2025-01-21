@@ -25,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _exibirSenha = false;
   final _formKey = GlobalKey<FormState>();
   final LocalAuthentication auth = LocalAuthentication();
+  bool _rememberMe = false;
 
   // Verifica se a biometria está disponível no dispositivo
   Future<bool> _isBiometricAvailable() async {
@@ -69,7 +70,7 @@ class _LoginPageState extends State<LoginPage> {
         if (user != null) {
           final userProvider =
               Provider.of<UserProvider>(context, listen: false);
-          userProvider.login(user);
+          userProvider.login(user, _rememberMe);
 
           // Redireciona o usuário para a página principal após o login
           Navigator.pushReplacement(
@@ -112,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       final userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.login(userCredential.user!);
+      userProvider.login(userCredential.user!, _rememberMe);
 
       App_User? appUser = await userProvider.getUserDataFromDatabase();
 
@@ -190,6 +191,20 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                       ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: _rememberMe,
+                          onChanged: (value) {
+                            setState(() {
+                              _rememberMe = value!;
+                            });
+                          },
+                        ),
+                        Text('Manter-me conectado'),
+                      ],
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
