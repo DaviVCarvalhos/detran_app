@@ -22,10 +22,10 @@ class LoginButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
       ),
-      onPressed: () {
+      onPressed: () async {
         if (userProvider.isLoggedIn) {
           // Realizar logout
-          userProvider.logout();
+          await userProvider.logout();
           veiculoProvider.resetVeiculos();
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Você saiu com sucesso!")),

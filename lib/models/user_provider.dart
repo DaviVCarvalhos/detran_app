@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:detranapp/models/App_User.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
   User? _currentUser;
@@ -14,13 +15,46 @@ class UserProvider with ChangeNotifier {
   void login(User user) async {
     _currentUser = user;
     _app_user = await getUserDataFromDatabase();
+    await saveUserSession(_app_user!);
     notifyListeners();
   }
 
-  void logout() {
+  Future<void> logout() async {
     _currentUser = null;
     _app_user = null;
     FirebaseAuth.instance.signOut();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    notifyListeners();
+  }
+
+  Future<void> saveUserSession(App_User user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('id', user.id);
+    await prefs.setString('email', user.email);
+  }
+
+  Future<Map<String, String>?> getUserSession() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? id = prefs.getString('id');
+    String? email = prefs.getString('email');
+    if (id != null && email != null) {
+      return {'id': id, 'email': email};
+    }
+    return null;
+  }
+
+  Future<void> checkUserSession() async {
+    Map<String, String>? session = await getUserSession();
+    print(session);
+    if (session != null) {
+      String userId = session['id']!;
+      User? firebaseUser = FirebaseAuth.instance.currentUser;
+      if (firebaseUser != null && firebaseUser.uid == userId) {
+        _currentUser = firebaseUser;
+        _app_user = await getUserDataFromDatabase();
+      }
+    }
     notifyListeners();
   }
 
@@ -41,7 +75,6 @@ class UserProvider with ChangeNotifier {
         App_User app_user =
             App_User.fromMap(uid, Map<String, dynamic>.from(data));
 
-        // Verifica se a biometria foi configurada
         if (data['biometria'] == true) {
           return app_user;
         }

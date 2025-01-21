@@ -13,10 +13,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
+  final userProvider = UserProvider();
+  await userProvider.checkUserSession();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserProvider>(create: (_) => UserProvider()),
+        ChangeNotifierProvider<UserProvider>(create: (_) => userProvider),
         ChangeNotifierProvider<VeiculoProvider>(
             create: (_) => VeiculoProvider()),
         ChangeNotifierProvider<InfracaoProvider>(
