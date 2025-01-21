@@ -88,10 +88,10 @@ flutter_native_splash:
 
 flutter_icons:
   android: true
-  ios: true
+  ios: false
   image_path: images/detranlogo.jpg
   adaptive_icon_background: "#ffffff" # Cor de fundo para ícones adaptativos
-  adaptive_icon_foreground: assets/icons/app_icon_foreground.png
+  adaptive_icon_foreground: images/detranlogo.jpg
 
 
 # For information on the generic Dart part of this file, see the
