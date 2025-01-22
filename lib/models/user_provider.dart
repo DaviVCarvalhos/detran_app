@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:detranapp/models/App_User.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider with ChangeNotifier {
@@ -75,9 +79,9 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // Função para buscar os dados do usuário no Realtime Database
   Future<App_User?> getUserDataFromDatabase() async {
     if (_currentUser == null) {
+      print('Usuário não autenticado');
       return null;
     }
 
@@ -87,14 +91,24 @@ class UserProvider with ChangeNotifier {
     try {
       final snapshot = await databaseReference.get();
 
-      if (snapshot.value != null) {
+      if (snapshot.exists) {
         final data = snapshot.value as Map<dynamic, dynamic>;
+        print('Dados do usuário encontrados: $data');
+
         App_User app_user =
             App_User.fromMap(uid, Map<String, dynamic>.from(data));
 
+        app_user.profileImagePath = data["profileImagePath"];
+        print(app_user.profileImagePath);
+        app_user = app_user;
+
         if (data['biometria'] == true) {
           return app_user;
+        } else {
+          print('A chave "biometria" não é verdadeira ou não existe');
         }
+      } else {
+        print('Dados do usuário não encontrados no banco de dados');
       }
     } catch (e) {
       print('Erro ao buscar dados do usuário: $e');
@@ -116,6 +130,33 @@ class UserProvider with ChangeNotifier {
         SnackBar(content: Text('Erro ao atualizar o perfil: $e')),
       );
     }
+  }
+
+  Future<String> uploadProfileImage(XFile file) async {
+    final storageRef = FirebaseStorage.instance
+        .ref()
+        .child('profile_pictures')
+        .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+    await storageRef.putFile(File(file.path));
+
+    String imageUrl = await storageRef.getDownloadURL();
+
+    if (_currentUser != null) {
+      final userId = _currentUser!.uid;
+      final userRef = FirebaseDatabase.instance.ref('users/$userId');
+      try {
+        await userRef.update({
+          'profileImagePath': imageUrl,
+        });
+        print('Imagem de perfil atualizada com sucesso!');
+        return imageUrl;
+      } catch (e) {
+        print('Erro ao atualizar a imagem de perfil: $e');
+        return '';
+      }
+    }
+    return '';
   }
 
   Future<void> deleteCurrentUser() async {

@@ -11,7 +11,7 @@ class App_User {
       required this.nome,
       required this.email,
       required this.phone_number,
-      XFile? profileImage});
+      String? profileImagePath});
 
   String id;
   String cpf;
@@ -21,19 +21,20 @@ class App_User {
   DateTime datanascimento;
   List<Veiculo> veiculos = [];
 
-  XFile? profileImage;
+  String? profileImagePath;
 
   factory App_User.fromMap(String id, Map<String, dynamic> map) {
+    // print(map["profileImagePath"]);
     try {
       return App_User(
-        id: id,
-        cpf: map['cpf'] ?? '',
-        nome: map['nome'] ?? '',
-        email: map['email'] ?? '',
-        phone_number: map['telefone'] ?? '',
-        datanascimento: DateTime.tryParse(map['dataNascimento'] ?? '') ??
-            DateTime(1970, 1, 1),
-      );
+          id: id,
+          cpf: map['cpf'] ?? '',
+          nome: map['nome'] ?? '',
+          email: map['email'] ?? '',
+          phone_number: map['telefone'] ?? '',
+          datanascimento: DateTime.tryParse(map['dataNascimento'] ?? '') ??
+              DateTime(1970, 1, 1),
+          profileImagePath: map["profileImagePath"] ?? '');
     } catch (e) {
       throw Exception('Erro ao converter os dados do usuário: $e');
     }
@@ -47,6 +48,7 @@ class App_User {
       'email': email,
       'telefone': phone_number,
       'dataNascimento': datanascimento.toIso8601String(),
+      'profileImagePath': profileImagePath
     };
   }
 }
