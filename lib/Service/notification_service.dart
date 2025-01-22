@@ -2,6 +2,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 class NotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final GlobalKey<NavigatorState> navigatorKey;
@@ -27,6 +29,10 @@ class NotificationService {
 
     String? token = await _firebaseMessaging.getToken();
     print("Token do dispositivo para FCM: $token");
+
+    if (token != null) {
+      await _storeTokenLocally(token);
+    }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (message.notification != null) {
@@ -69,11 +75,20 @@ class NotificationService {
     String? route = data['routes'];
 
     if (route != null) {
-      if (navigatorKey.currentState?.canPop() ?? false) {
-        navigatorKey.currentState?.popUntil((route) => false);
+      if (!navigatorKey.currentState!.mounted) {
+        navigatorKey.currentState?.pushNamedAndRemoveUntil(
+          route,
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        navigatorKey.currentState?.pushNamed(route);
       }
-
-      navigatorKey.currentState?.pushNamed(route);
     }
+  }
+
+  Future<void> _storeTokenLocally(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('device_token', token);
+    print("Token armazenado localmente: $token");
   }
 }

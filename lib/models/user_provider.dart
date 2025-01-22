@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:detranapp/models/App_User.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class UserProvider with ChangeNotifier {
   User? _currentUser;
@@ -23,6 +24,10 @@ class UserProvider with ChangeNotifier {
     _currentUser = user;
     _app_user = await getUserDataFromDatabase();
     await saveUserSession(_app_user!, rememberUser);
+    String? token = await _getStoredToken();
+    if (token != null) {
+      await saveDeviceToken(token);
+    }
     notifyListeners();
   }
 
@@ -33,6 +38,34 @@ class UserProvider with ChangeNotifier {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     notifyListeners();
+  }
+
+  Future<void> saveDeviceToken(String token) async {
+    final _baseUrl = 'https://detranapp-75e56-default-rtdb.firebaseio.com/';
+
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/tokens.json'),
+        body: jsonEncode({
+          'token': token,
+          'userId': _app_user!.id,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print("Token enviado com sucesso para o backend.");
+      } else {
+        print(
+            "Erro ao enviar token: ${response.statusCode} - ${response.body}");
+      }
+    } catch (e) {
+      print("Erro ao enviar token: $e");
+    }
+  }
+
+  Future<String?> _getStoredToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('device_token');
   }
 
   Future<void> saveUserSession(App_User user, bool rememberUser) async {
