@@ -42,8 +42,26 @@ class UserProvider with ChangeNotifier {
 
   Future<void> saveDeviceToken(String token) async {
     final _baseUrl = 'https://detranapp-75e56-default-rtdb.firebaseio.com/';
-
     try {
+      final checkResponse = await http.get(Uri.parse('$_baseUrl/tokens.json'));
+
+      if (checkResponse.statusCode == 200) {
+        final Map<String, dynamic>? tokensData = jsonDecode(checkResponse.body);
+
+        if (tokensData != null) {
+          final tokenExists =
+              tokensData.values.any((data) => data['token'] == token);
+
+          if (tokenExists) {
+            print("Token já registrado");
+            return;
+          }
+        }
+      } else {
+        print(
+            "Erro ao verificar tokens: ${checkResponse.statusCode} - ${checkResponse.body}");
+      }
+
       final response = await http.post(
         Uri.parse('$_baseUrl/tokens.json'),
         body: jsonEncode({
@@ -53,7 +71,7 @@ class UserProvider with ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        print("Token enviado com sucesso para o backend.");
+        print("Token enviado");
       } else {
         print(
             "Erro ao enviar token: ${response.statusCode} - ${response.body}");
